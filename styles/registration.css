@@ -1,0 +1,15 @@
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.registration-form {
+    width: 30vw;
+    height: 60vh;
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
