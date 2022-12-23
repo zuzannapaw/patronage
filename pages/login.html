@@ -1,16 +1,19 @@
-<link rel="stylesheet" href="styles/login.css" />
-
+<!-- <link rel="stylesheet" href="styles/login.css" /> -->
 
 <div class="form-wrapper">
-    <form class="login-form">
-        <div class="username-input">
-            <label>Nazwa użytkownika</label>
-            <input></input>
-        </div>
-        <div class="password-input">
-            <label>Hasło</label>
-            <input></input>
-        </div>
-        <button class="login-button"><a href="/user" onclick="route()">Zaloguj</a></button>
+    <form>
+        <ul class="wrapper">
+            <li class="form-row">
+                <label for="townborn">Email</label>
+                <input type="text" id="townborn">
+            </li>
+            <li class="form-row">
+                <label for="email">Hasło</label>
+                <input type="email" id="email">
+            </li>
+            <li class="form-row">
+                <a class="login" href="/user" onclick="route()">Zaloguj</a>
+            </li>
+        </ul>
     </form>
 </div>

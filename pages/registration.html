@@ -1,19 +1,23 @@
-<link rel="stylesheet" href="styles/registration.css" />
+<!-- <link rel="stylesheet" href="styles/registration.css" /> -->
 
 <div class="form-wrapper">
-    <form class="registration-form">
-        <div class="input password-input">
-            <label>Hasło</label>
-            <input></input>
-        </div>
-        <div class="input repeat-password-input">
-            <label>E-mail</label>
-            <input></input>
-        </div>
-        <div class="input confirm-password-input">
-            <label> Potwierdź e-mail</label>
-            <input></input>
-        </div>
-        <button><a href="/user" onclick="route()">Zarejestruj</a></button>
-    </form>
-</div>
+    <form>
+        <ul class="wrapper">
+            <li class="form-row">
+                <label for="password">Hasło</label>
+                <input type="password" id="email">
+              </li>
+          <li class="form-row">
+            <label for="townborn">Email</label>
+            <input type="text" id="townborn">
+          </li>
+          <li class="form-row">
+            <label for="email">Potwierdź email</label>
+            <input type="email" id="email">
+          </li>
+          <li class="form-row">
+            <a href="/user" onclick="route()">Zarejestruj</a>
+          </li>
+        </ul>
+      </form>
+    </div>
