@@ -18,3 +18,12 @@
     color:white;
     margin:3%;
 }
+
+#main-nav div.logoutWrapper{
+    width:80%;
+    height:auto;
+    display: flex;
+    flex-direction: row-reverse;
+    
+    
+}
