@@ -1,11 +1,11 @@
-<!-- <link rel="stylesheet" href="styles/registration.css" /> -->
+// <!-- <link rel="stylesheet" href="styles/registration.css" /> -->
 
-<div class="form-wrapper">
+export const renderRegistration = () => `<div class="form-wrapper">
     <form>
         <ul class="wrapper">
             <li class="form-row">
                 <label for="password">Hasło</label>
-                <input type="password" id="email">
+                <input type="password" id="password">
               </li>
           <li class="form-row">
             <label for="townborn">Email</label>
@@ -21,3 +21,6 @@
         </ul>
       </form>
     </div>
+`;
+export const initRegistration = () => {};
+export const cleanupRegistration = () => {};
