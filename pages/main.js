@@ -3,3 +3,4 @@ export const renderMain = () => `<h1>
 </h1>`;
 export const initMain = () => {};
 export const cleanupMain = () => {};
+

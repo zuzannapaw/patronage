@@ -9,6 +9,7 @@ let loggedIn;
 const logoutUser = () => {
     console.log("logout correct")
     localStorage.clear("user");
+    logoutLink = document.querySelector(".logoutLink");
     loggedIn = localStorage.getItem("user");
 
     //should i do "if" only for possible situation or not to be sure?
@@ -25,6 +26,8 @@ const logoutUser = () => {
         registrationLink.style.visibility = "visible";
 
     };
+
+    return window.history.pushState({}, "","/");
 
 };
 
@@ -76,7 +79,7 @@ export const initTransactions = () => {
     logoutLink = document.querySelector(".logoutLink");
     loggedIn = localStorage.getItem("user");
 
-    logoutLink.addEventListener("click", logoutUser)
+    logoutLink.onclick = logoutUser;
 };
 
 export const cleanupTransactions = () => {

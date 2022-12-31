@@ -47,19 +47,19 @@ const handleLocation = async () => {
     route.init();
 }
 
-const route = (event) => {
-    event = event || window.event;
-    event.preventDefault();
-    window.history.pushState({}, "", event.target.href);
-    handleLocation();
-};
+// const route = (event) => {
+//     event = event || window.event;
+//     event.preventDefault();
+//     window.history.pushState({}, "", event.target.href);
+//     handleLocation();
+// };
 
-const cleanup = () => {
-    console.log('location changed!');
-    const path = window.location.pathname;
-    const route = routes[path] || routes[404];
-    route.cleanup();
-}
+// const cleanup = () => {
+//     console.log('location changed!');
+//     const path = window.location.pathname;
+//     const route = routes[path] || routes[404];
+//     route.cleanup();
+// }
 
 // https://stackoverflow.com/a/52809105
 (() => {
@@ -89,6 +89,6 @@ window.addEventListener('locationchange', function () {
     handleLocation();
 });
 
-window.route = route;
+// window.route = route;
 
 handleLocation();

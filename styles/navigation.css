@@ -13,10 +13,33 @@
     align-items: center;
 }
 
-#main-nav a {
+#main-nav button{
+    width:8%;
+    height:50%;
+
+}
+
+/*width height do not work*/
+
+#main-nav .logoutLink button{
+    width:10%;
+    height:80%;
+}
+
+#main-nav button, .logoutLink {
     text-decoration: none;
+    font-size: 0.9em;
+    border:none;
+    background-color: transparent;
     color:white;
     margin:3%;
+    transition: .3s;
+    cursor:pointer;
+
+}
+
+#main-nav button:hover, div.logoutWrapper button:hover{
+    background-color: rgba(220,220,220,20%);
 }
 
 #main-nav div.logoutWrapper{

@@ -1,4 +1,7 @@
 // <!-- <link rel="stylesheet" href="styles/registration.css" /> -->
+import { store } from "../js/global";
+let registrationLink;
+let loginLink;
 
 export const renderRegistration = () => `<div class="form-wrapper">
     <form>
@@ -22,5 +25,13 @@ export const renderRegistration = () => `<div class="form-wrapper">
       </form>
     </div>
 `;
-export const initRegistration = () => {};
+export const initRegistration = () => {
+  registrationLink = document.querySelector(".registrLink")
+  loginLink = document.querySelector(".loginLink")
+  store.isInLogin = false;
+  if(!store.isInLogin){
+    registrationLink.style.visibility = "hidden";
+    loginLink.style.visibility = "visible"
+  }
+};
 export const cleanupRegistration = () => {};

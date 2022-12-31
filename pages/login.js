@@ -1,3 +1,4 @@
+import { store } from "../js/global";
 
 let btnLogin;
 let emailInput;
@@ -23,6 +24,11 @@ const loginUser = () => {
        }
     
     if (!loggedIn) logoutLink.style.visibility = "hidden";
+
+    
+   return window.history.pushState({}, "","/transactions");
+   
+
    
 };
 
@@ -39,7 +45,7 @@ export const renderLogin = () => `
                 <input type="password" id="password">
             </li>
             <li class="form-row">
-                <a id="login-btn" class="login" href="/transactions" type="submit" onclick="route()">Zaloguj</a>
+                <button id="login-btn" class="login">Zaloguj</button>
             </li>
         </ul>
     </form>
@@ -56,7 +62,13 @@ export const initLogin = () => {
  logoutLink = document.querySelector(".logoutLink");
  loggedIn = localStorage.getItem("user");
 
- btnLogin.addEventListener("click",loginUser)
+ btnLogin.onclick = loginUser;
+
+ store.isInLogin = true;
+ if(store.isInLogin){
+    loginLink.style.visibility = "hidden";
+    registrationLink.style.visibility = "visible";
+ }
 
  
 };
