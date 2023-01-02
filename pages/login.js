@@ -8,22 +8,50 @@ let registrationLink;
 let loginLink; 
 let logoutLink; 
 let loggedIn; 
+let liInput;
+
+const storageUsers = localStorage.getItem("users");
+const users = JSON.parse(storageUsers)
+console.log( `users in storage: ${users}`);
 
 
 //in future maybe helper function for login and registration?
 
-const loginUser = () => {
-    console.log("login correct");
+const loginUser = (e) => {
 
+    e.preventDefault();
+
+    console.log( `users in storage: ${users}`);
+    //change name
+  
     logoutLink = document.querySelector(".logoutLink");
     loginLink = document.querySelector(".loginLink");
     registrationLink = document.querySelector(".registrLink");
+    emailInput = document.getElementById("email");
+//change to array
 
-    localStorage.setItem("user","zuza");
-    loggedIn = localStorage.getItem("user");
+    const currentUser = users.find(user => user.email === emailInput.value)
+    console.log(currentUser)
+
+    if(emailInput.value.includes("@") && emailInput.value === currentUser.email.value ) {
+        console.log("login correct");
+        localStorage.setItem("user",currentUser);
+        window.history.pushState({}, "","/transactions");
+    
+       }else{
+        //inserting message below input BUT ONLY ONCE *
+        liInput = document.querySelector(".form-row");
+        const emailMessage = document.createElement("p");
+        emailMessage.innerHTML= "Insert proper email"
+        emailMessage.classList.add("email-error");
+    
+        liInput.insertAdjacentElement('afterend',emailMessage);
+        return
+    }
 
 
     //should i do "if" only for possible situation or not to be sure?
+    loggedIn = localStorage.getItem("user");
 
     if (loggedIn) {
         logoutLink.style.visibility = "visible";
@@ -36,10 +64,9 @@ const loginUser = () => {
     loginLink.style.order = "0";
     registrationLink.style.order = "0";
 
-    
-   return window.history.pushState({}, "","/transactions");
+   }
  
-};
+
 
 export const beforeLoginRender = async () => {
     store.isInLogin = true;
@@ -59,8 +86,8 @@ export const renderLogin = () => `
     <form>
         <ul class="wrapper">
             <li class="form-row">
-                <label for="email">Email</label>
-                <input type="email" id="email">
+                <label>Email</label>
+                <input id="email">
             </li>
             <li class="form-row">
                 <label for="password">Hasło</label>
@@ -92,53 +119,3 @@ export const cleanupLogin = () => {
     btnLogin.removeEventListener('click', loginUser);
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////OLD
-// const user1 = {
-//     name: "Zuzanna",
-//     email:"zuzanna@",
-//     password:"11111",
-// }
-
-// const user2 = {
-//     name: "Marcin",
-//     email:"Marcin@",
-//     password:"22222"
-// }
-
-// const users = [user1,user2]
-
-// let currentUser;
-// let loginHref;
-
-//  const loginHandler = (e) => {
-//      e.preventDefault();
-//     //  if (emailInput.value) {
-//     //     //  currentUser = users.find(user => user.email === emailInput.value);
-//     //     //  loginHref = "/user";
-//     //      localStorage.setItem("user","zuza");
-//     //      console.log("login correct")
-        
-//     //  }else{
-//     //      loginHref = "/";
-//     //      emailInput.style.color = "red";
-//     //      return
-//     //      //jesli wpisaes zle dane haslo login to nie mozesz wejsc. link nie moze cie dac na druga strone 
-//     //  }
-
-//      console.log("login correct")
-
-//  }
-
-//  btnLogin.addEventListener("click", loginUser);

@@ -8,6 +8,11 @@ export const getData = async (url, headers) => {
     return await response.json();
 }
 
+
+
+
+
+
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 export const postData = async (url = '', data = {}) => {
     // Default options are marked with *

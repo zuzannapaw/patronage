@@ -1,14 +1,15 @@
 import { getData } from '../services/api-service.js';
 import { store } from '../js/global.js';
-
+let response;
 let registrationLink;
 let loginLink;
 let logoutLink;
 let loggedIn;
 
-const logoutUser = () => {
-    console.log("logout correct")
-    localStorage.clear("user");
+const logoutUser = (e) => {
+    e.preventDefault();
+    console.log("logout correct");
+    localStorage.removeItem("user");
     logoutLink = document.querySelector(".logoutLink");
     loggedIn = localStorage.getItem("user");
 
@@ -37,26 +38,26 @@ const logoutUser = () => {
 };
 
 export const beforeTransactionsRender = async () => {
-    const { record } = await getData('https://api.jsonbin.io/v3/b/63adb792dfc68e59d5737c74', {
-        'x-access-key': '$2b$10$x7ySYzbsgjw/0uzom0c9Su40HGSn/Qiw9VHcoGQNU1V6bwQdnRDIS',
-    });
+    response = await getData('https://api.npoint.io/38edf0c5f3eb9ac768bd',{});
 
-    store.transactions = record.transactions;
+    store.transactions = response.transactions;
 
-    const result = { transactions: record.transactions };
+    const result = { transactions: response.transactions };
 
     return result;
 }
 
-export const renderTransactions = ({ transactions }) => {
+export const renderTransactions = () => {
     return (`
         <h1>transactions</h1>
         <ul id='transactions-list'>
-            ${transactions.map(transaction => (`
+            ${response.transactions.map(transaction => (`
                 <li>
                     <div id="transaction-${transaction.id}">
-                        Transaction ${transaction.id}
+                        Transaction ${transaction.description}
                     </div>
+                    <p>Data: ${transaction.date}</p>
+                    <p>Kwota: ${transaction.amount}</p>
                 </li>
                 `)
     )}

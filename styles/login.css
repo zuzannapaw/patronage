@@ -41,3 +41,8 @@
     color: white;
     border: 0;
 }
+
+.email-error{
+    color:red;
+    margin-left: 36%;
+}
