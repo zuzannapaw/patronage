@@ -14,16 +14,21 @@ const logoutUser = () => {
 
     //should i do "if" only for possible situation or not to be sure?
 
-    if(loggedIn){
-        logoutLink.style.visibility = "visible";
-        loginLink.style.visibility = "hidden";
-        registrationLink.style.visibility = "hidden";
-     };
+    // if(loggedIn){
+    //     logoutLink.style.visibility = "visible";
+    //     loginLink.style.visibility = "hidden";
+    //     registrationLink.style.visibility = "hidden";
+    //  };
+
+    //are these conditions necessary? logoutUser and functions only without check if the user is logged in or not?
     
     if(!loggedIn){
         logoutLink.style.visibility = "hidden";
         loginLink.style.visibility = "visible";
         registrationLink.style.visibility = "visible";
+
+        registrationLink.style.order = "0";
+        loginLink.style.order= "0";
 
     };
 

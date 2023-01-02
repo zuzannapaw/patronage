@@ -1,7 +1,36 @@
-// <!-- <link rel="stylesheet" href="styles/registration.css" /> -->
-import { store } from "../js/global";
+
+import { store } from '../js/global.js';
 let registrationLink;
 let loginLink;
+let logoutLink;
+let navBar;
+let registrationButton;
+
+
+const registrationHandle = () => {
+  logoutLink = document.querySelector(".logoutLink");
+  loginLink = document.querySelector(".loginLink");
+  registrationLink = document.querySelector(".registrLink");
+  
+  localStorage.setItem("user","zuza");
+  const loggedIn = localStorage.getItem("user");
+
+
+  //should i do "if" only for possible situation or not to be sure?
+
+  if (loggedIn) {
+      logoutLink.style.visibility = "visible";
+      loginLink.style.visibility = "hidden";
+      registrationLink.style.visibility = "hidden";
+     }
+  
+  if (!loggedIn) logoutLink.style.visibility = "hidden";
+
+  
+ return window.history.pushState({}, "","/transactions");
+ 
+
+}
 
 export const renderRegistration = () => `<div class="form-wrapper">
     <form>
@@ -19,19 +48,34 @@ export const renderRegistration = () => `<div class="form-wrapper">
             <input type="email" id="email">
           </li>
           <li class="form-row">
-            <a href="/user" onclick="route()">Zarejestruj</a>
+            <button class="registr-button">Zarejestruj</a>
           </li>
         </ul>
       </form>
     </div>
 `;
-export const initRegistration = () => {
-  registrationLink = document.querySelector(".registrLink")
-  loginLink = document.querySelector(".loginLink")
+
+export const beforeRegistrationRender = async () => {
   store.isInLogin = false;
-  if(!store.isInLogin){
+  navBar = document.getElementById("main-nav");
+  registrationLink = document.querySelector(".registrLink");
+  loginLink = document.querySelector(".loginLink")
+  if (!store.isInLogin) {
+    loginLink.style.visibility = "visible";
     registrationLink.style.visibility = "hidden";
-    loginLink.style.visibility = "visible"
+    registrationLink.style.order = "1";
+    loginLink.style.order = "-1";
   }
+
+}
+
+export const initRegistration = () => {
+
+  registrationButton = document.querySelector(".registr-button");
+  
+  registrationButton.onclick = registrationHandle;
+
+
+
 };
-export const cleanupRegistration = () => {};
+export const cleanupRegistration = () => { };

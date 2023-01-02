@@ -43,7 +43,7 @@
 }
 
 #main-nav div.logoutWrapper{
-    width:80%;
+    width:90%;
     height:auto;
     display: flex;
     flex-direction: row-reverse;

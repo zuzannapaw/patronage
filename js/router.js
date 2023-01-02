@@ -1,7 +1,7 @@
 import { cleanup404, init404, render404 } from "../pages/404.js";
 import { cleanupMain, initMain, renderMain } from "../pages/main.js";
-import { cleanupLogin, initLogin, renderLogin } from "../pages/login.js";
-import { cleanupRegistration, initRegistration, renderRegistration } from "../pages/registration.js";
+import { beforeLoginRender, cleanupLogin, initLogin, renderLogin } from "../pages/login.js";
+import { cleanupRegistration, initRegistration, renderRegistration,beforeRegistrationRender } from "../pages/registration.js";
 import {
     cleanupTransactions,
     initTransactions,
@@ -18,8 +18,8 @@ import {
 export const routes = {
     404: {render: render404, init: init404, cleanup: cleanup404},
     "/": {render: renderMain, init: initMain, cleanup: cleanupMain},
-    "/registration": {render: renderRegistration, init: initRegistration, cleanup: cleanupRegistration},
-    "/login": {render: renderLogin, init: initLogin, cleanup: cleanupLogin},
+    "/registration": {beforeRender: beforeRegistrationRender ,render: renderRegistration, init: initRegistration, cleanup: cleanupRegistration},
+    "/login": { beforeRender: beforeLoginRender, render: renderLogin, init: initLogin, cleanup: cleanupLogin},
     "/transactions": {
         beforeRender: beforeTransactionsRender,
         render: renderTransactions,

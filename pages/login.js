@@ -1,4 +1,4 @@
-import { store } from "../js/global";
+import { store } from '../js/global.js';
 
 let btnLogin;
 let emailInput;
@@ -10,10 +10,18 @@ let logoutLink;
 let loggedIn; 
 
 
+//in future maybe helper function for login and registration?
+
 const loginUser = () => {
     console.log("login correct");
+
+    logoutLink = document.querySelector(".logoutLink");
+    loginLink = document.querySelector(".loginLink");
+    registrationLink = document.querySelector(".registrLink");
+
     localStorage.setItem("user","zuza");
     loggedIn = localStorage.getItem("user");
+
 
     //should i do "if" only for possible situation or not to be sure?
 
@@ -25,12 +33,26 @@ const loginUser = () => {
     
     if (!loggedIn) logoutLink.style.visibility = "hidden";
 
+    loginLink.style.order = "0";
+    registrationLink.style.order = "0";
+
     
    return window.history.pushState({}, "","/transactions");
-   
-
-   
+ 
 };
+
+export const beforeLoginRender = async () => {
+    store.isInLogin = true;
+    registrationLink = document.querySelector(".registrLink");
+    loginLink = document.querySelector(".loginLink")
+    if(store.isInLogin){
+        loginLink.style.visibility = "hidden";
+        registrationLink.style.visibility = "visible";
+        loginLink.style.order = "1";
+        registrationLink.style.order = "-1";
+    }
+
+}
 
 export const renderLogin = () => `
 <div class="form-wrapper">
@@ -53,24 +75,15 @@ export const renderLogin = () => `
 `;
 
 export const initLogin = () => {
+
  btnLogin = document.getElementById('login-btn');
+ //for validation
  emailInput = document.querySelector('#email');
  passwordInput = document.querySelector('#password');
  //these selectors should be visible by code because navigation is in index.html
- registrationLink = document.querySelector(".registrLink");
- loginLink = document.querySelector(".loginLink")
- logoutLink = document.querySelector(".logoutLink");
  loggedIn = localStorage.getItem("user");
 
  btnLogin.onclick = loginUser;
-
- store.isInLogin = true;
- if(store.isInLogin){
-    loginLink.style.visibility = "hidden";
-    registrationLink.style.visibility = "visible";
- }
-
- 
 };
 
 export const cleanupLogin = () => {
