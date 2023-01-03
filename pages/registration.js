@@ -1,16 +1,22 @@
 
 import { store } from '../js/global.js';
-let registrationLink;
-let loginLink;
-let logoutLink;
-let navBar;
-let registrationButton;
+let toRegistrationBtn;
+let toLoginBtn
+
+let loginBtn;
+let logoutBtn;
+let registrationBtn;
+
 let emailInput;
 let passwordInput;
-let loggedIn;
+
+
+let navBar;
 let liInput;
+
 let freeUser;
 let users;
+let loggedIn;
 
 //if i change value of variable inside function it will be changed in global scope as well?
 
@@ -59,28 +65,34 @@ const registrationHandle = (e) => {
     liInput.insertAdjacentElement('afterend',emailMessage);
   }
 
+  //checking for proper navigation display
+
   loggedIn = sessionStorage.getItem("currentUser");
 
   if (loggedIn) {
-    logoutLink.style.visibility = "visible";
-    loginLink.style.visibility = "hidden";
-    registrationLink.style.visibility = "hidden";
+    logoutBtn.style.visibility = "visible";
+    loginBtn.style.visibility = "hidden";
+    registrationBtn.style.visibility = "hidden";
    }
 
-if (!loggedIn) logoutLink.style.visibility = "hidden";
+  if (!loggedIn) logoutLink.style.visibility = "hidden";
+
+  //navigation buttons get to normal position
+  toLoginBtn.style.order = "0";
+  toRegistrationBtn.style.order = "0";
  
 };
 
 export const beforeRegistrationRender = async () => {
   store.isInLoginPage = false;
   navBar = document.getElementById("main-nav");
-  registrationLink = document.querySelector(".registrLink");
-  loginLink = document.querySelector(".loginLink")
+  toRegistrationBtn = document.querySelector(".to-registration-page");
+  toLoginBtn = document.querySelector(".to-login-page")
   if (!store.isInLoginPage) {
-    loginLink.style.visibility = "visible";
-    registrationLink.style.visibility = "hidden";
-    registrationLink.style.order = "1";
-    loginLink.style.order = "-1";
+    toLoginBtn.style.visibility = "visible";
+    toRegistrationBtn.style.visibility = "hidden";
+    toRegistrationBtn.style.order = "1";
+    toLoginBtn.style.order = "-1";
   }
 
 }
@@ -101,7 +113,7 @@ export const renderRegistration = () => `<div class="form-wrapper">
             <input type="email" id="email">
           </li>
           <li class="form-row">
-            <button class="registr-button">Zarejestruj</a>
+            <button class="registration-button">Zarejestruj</a>
           </li>
         </ul>
       </form>
@@ -109,13 +121,13 @@ export const renderRegistration = () => `<div class="form-wrapper">
 `;
 
 export const initRegistration = () => {
-  logoutLink = document.querySelector(".logoutLink");
+  logoutBtn = document.querySelector(".logout-btn");
   emailInput = document.querySelector(".registration-email");
   passwordInput = document.getElementById("password");
 
-  registrationButton = document.querySelector(".registr-button");
+  registrationBtn = document.querySelector(".registration-button");
   
-  registrationButton.onclick = registrationHandle;
+  registrationBtn.onclick = registrationHandle;
 };
 
 export const cleanupRegistration = () => {};

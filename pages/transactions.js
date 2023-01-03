@@ -1,17 +1,18 @@
 import { getData } from '../services/api-service.js';
 import { store } from '../js/global.js';
+
 let response;
-let registrationLink;
-let loginLink;
-let logoutLink;
+let toRegistrationBtn;
+let toLoginBtn;
+let logoutBtn;
 let loggedIn;
 
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
     sessionStorage.removeItem("currentUser");
-    logoutLink = document.querySelector(".logoutLink");
-    
+    logoutBtn = document.querySelector(".logout-btn");
+
     loggedIn = sessionStorage.getItem("currentUser");
 
     //should i do "if" only for possible situation or not to be sure?
@@ -25,12 +26,12 @@ const logoutUser = (e) => {
     //are these conditions necessary? logoutUser and functions only without check if the user is logged in or not?
     
     if(!loggedIn){
-        logoutLink.style.visibility = "hidden";
-        loginLink.style.visibility = "visible";
-        registrationLink.style.visibility = "visible";
+        logoutBtn.style.visibility = "hidden";
+        toLoginBtn.style.visibility = "visible";
+        toRegistrationBtn.style.visibility = "visible";
 
-        registrationLink.style.order = "0";
-        loginLink.style.order= "0";
+        toRegistrationBtn.style.order = "0";
+        toLoginBtn.style.order= "0";
 
     };
 
@@ -68,9 +69,9 @@ export const renderTransactions = () => {
 
 export const initTransactions = () => {
 
-    registrationLink = document.querySelector(".registrLink");
-    loginLink = document.querySelector(".loginLink");
-    logoutLink = document.querySelector(".logoutLink");
+    toRegistrationBtn= document.querySelector(".to-registration-page");
+    toLoginBtn = document.querySelector(".to-login-page");
+    logoutBtn = document.querySelector(".logout-btn");
 
     const allTransactions = store.transactions;
 
@@ -86,11 +87,11 @@ export const initTransactions = () => {
         }
     }
 
-    logoutLink.onclick = logoutUser;
+    logoutBtn.onclick = logoutUser;
 };
 
 export const cleanupTransactions = () => {
     console.log('cleanupLogin');
-    logoutLink = document.querySelector('.logoutLink');
-    logoutLink.removeEventListener('click', logoutUser);
+    logoutBtn = document.querySelector('.logoutLink');
+    logoutBtn.removeEventListener('click', logoutUser);
 };

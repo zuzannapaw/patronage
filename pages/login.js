@@ -1,12 +1,13 @@
 import { store } from '../js/global.js';
 
-let btnLogin;
 let emailInput;
 let passwordInput;
 
-let registrationLink;
-let loginLink; 
-let logoutLink; 
+let toRegistrationBtn;
+let toLoginBtn; 
+let logoutBtn; 
+let loginBtn
+
 let loggedIn; 
 let liInput;
 
@@ -41,20 +42,22 @@ const loginUser = (e) => {
 
 
     //should i do "if" only for possible situation or not to be sure?
+
+     //checking for proper navigation display
     loggedIn = sessionStorage.getItem("currentUser");
 
     if (loggedIn) {
-        logoutLink.style.visibility = "visible";
-        loginLink.style.visibility = "hidden";
-        registrationLink.style.visibility = "hidden";
+        logoutBtn.style.visibility = "visible";
+        toLoginBtn.style.visibility = "hidden";
+        toRegistrationBtn.style.visibility = "hidden";
        }
     
-    if (!loggedIn) logoutLink.style.visibility = "hidden";
+    if (!loggedIn) logoutBtn.style.visibility = "hidden";
 
 
     //navigation buttons get to normal position
-    loginLink.style.order = "0";
-    registrationLink.style.order = "0";
+    toLoginBtn.style.order = "0";
+    toRegistrationBtn.style.order = "0";
 
    }
  
@@ -62,13 +65,13 @@ const loginUser = (e) => {
 
 export const beforeLoginRender = async () => {
     store.isInLoginPage = true;
-    registrationLink = document.querySelector(".registrLink");
-    loginLink = document.querySelector(".loginLink")
+    toRegistrationBtn = document.querySelector(".to-registration-page");
+    toLoginBtn = document.querySelector(".to-login-page")
     if(store.isInLoginPage){
-        loginLink.style.visibility = "hidden";
-        registrationLink.style.visibility = "visible";
-        loginLink.style.order = "1";
-        registrationLink.style.order = "-1";
+        toLoginBtn.style.visibility = "hidden";
+        toRegistrationBtn.style.visibility = "visible";
+        toLoginBtn.style.order = "1";
+        toRegistrationBtn.style.order = "-1";
     }
 
 }
@@ -94,19 +97,19 @@ export const renderLogin = () => `
 `;
 
 export const initLogin = () => {
- logoutLink = document.querySelector(".logoutLink");
- btnLogin = document.getElementById('login-btn');
+ logoutBtn= document.querySelector(".logout-btn");
+ loginBtn = document.getElementById('login-btn');
  //for validation
  emailInput = document.querySelector('#email');
  passwordInput = document.querySelector('#password');
  //these selectors should be visible by code because navigation is in index.html
 
- btnLogin.onclick = loginUser;
+ loginBtn.onclick = loginUser;
 };
 
 export const cleanupLogin = () => {
     console.log('cleanupLogin');
-    btnLogin = document.getElementById('login-btn');
-    btnLogin.removeEventListener('click', loginUser);
+    loginBtn = document.getElementById('login-btn');
+    loginBtn.removeEventListener('click', loginUser);
 };
 
