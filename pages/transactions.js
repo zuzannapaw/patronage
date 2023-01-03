@@ -9,9 +9,10 @@ let loggedIn;
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("currentUser");
     logoutLink = document.querySelector(".logoutLink");
-    loggedIn = localStorage.getItem("user");
+    
+    loggedIn = sessionStorage.getItem("currentUser");
 
     //should i do "if" only for possible situation or not to be sure?
 
@@ -66,6 +67,11 @@ export const renderTransactions = () => {
 };
 
 export const initTransactions = () => {
+
+    registrationLink = document.querySelector(".registrLink");
+    loginLink = document.querySelector(".loginLink");
+    logoutLink = document.querySelector(".logoutLink");
+
     const allTransactions = store.transactions;
 
     for (const transaction of allTransactions) {
@@ -79,11 +85,6 @@ export const initTransactions = () => {
             transactionDiv.onclick = onTransactionClick;
         }
     }
-
-    registrationLink = document.querySelector(".registrLink");
-    loginLink = document.querySelector(".loginLink");
-    logoutLink = document.querySelector(".logoutLink");
-    loggedIn = localStorage.getItem("user");
 
     logoutLink.onclick = logoutUser;
 };

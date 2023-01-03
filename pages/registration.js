@@ -9,32 +9,32 @@ let emailInput;
 let passwordInput;
 let loggedIn;
 let liInput;
+let freeUser;
+let users;
 
 //if i change value of variable inside function it will be changed in global scope as well?
 
 
 const registrationHandle = (e) => {
   e.preventDefault();
-  logoutLink = document.querySelector(".logoutLink");
-  loginLink = document.querySelector(".loginLink");
-  registrationLink = document.querySelector(".registrLink");
-  emailInput = document.querySelector(".registration-email");
-  passwordInput = document.getElementById("password");
-  
-  const storageUsers = localStorage.getItem("users");
-  const users = JSON.parse(storageUsers);
+ 
+  const storageUsers = sessionStorage.getItem("users");
+
+  if(storageUsers){
+    users = JSON.parse(storageUsers);
+  }else{
+    users = [];
+  }
   
   const newUser = {
   email: emailInput.value,
-  name: "zuza",
-  //name will be changed in global state
+  name: JSON.stringify(emailInput.value).substring(-1,1),
   password: passwordInput.value,
-}
+ };
  
-  //should i do "if" only for possible situation or not to be sure?
+
   //freeUser if existing user or another user
-  let freeUser;
-  if(users.length){
+  if(users.length > 0){
   freeUser = users.find(user=> user.email !== emailInput.value);
   }else{
     freeUser = emailInput.value
@@ -43,25 +43,23 @@ const registrationHandle = (e) => {
   //basic validation
   if(newUser.email === freeUser){
     users.push(newUser);
-    const newUserString = JSON.stringify(users);
-    localStorage.setItem("users",newUserString);
-    localStorage.setItem("user",newUser);
-    loggedIn = localStorage.getItem("user");
+    const updatedUsersString = JSON.stringify(users);
+    sessionStorage.setItem("users",updatedUsersString);
+    const newUserString = JSON.stringify(newUser)
+    sessionStorage.setItem("currentUser",newUserString);
     window.history.pushState({}, "","/transactions");
    
     console.log("registration correct")
 
-    
   }else{
     liInput = document.querySelector(".form-row");
     const emailMessage = document.createElement("p");
     emailMessage.innerHTML= "Email duplicated. Insert another email"
     emailMessage.classList.add("email-error");
-
     liInput.insertAdjacentElement('afterend',emailMessage);
-    return
   }
 
+  loggedIn = sessionStorage.getItem("currentUser");
 
   if (loggedIn) {
     logoutLink.style.visibility = "visible";
@@ -72,6 +70,20 @@ const registrationHandle = (e) => {
 if (!loggedIn) logoutLink.style.visibility = "hidden";
  
 };
+
+export const beforeRegistrationRender = async () => {
+  store.isInLoginPage = false;
+  navBar = document.getElementById("main-nav");
+  registrationLink = document.querySelector(".registrLink");
+  loginLink = document.querySelector(".loginLink")
+  if (!store.isInLoginPage) {
+    loginLink.style.visibility = "visible";
+    registrationLink.style.visibility = "hidden";
+    registrationLink.style.order = "1";
+    loginLink.style.order = "-1";
+  }
+
+}
 
 export const renderRegistration = () => `<div class="form-wrapper">
     <form>
@@ -96,27 +108,14 @@ export const renderRegistration = () => `<div class="form-wrapper">
     </div>
 `;
 
-export const beforeRegistrationRender = async () => {
-  store.isInLogin = false;
-  navBar = document.getElementById("main-nav");
-  registrationLink = document.querySelector(".registrLink");
-  loginLink = document.querySelector(".loginLink")
-  if (!store.isInLogin) {
-    loginLink.style.visibility = "visible";
-    registrationLink.style.visibility = "hidden";
-    registrationLink.style.order = "1";
-    loginLink.style.order = "-1";
-  }
-
-}
-
 export const initRegistration = () => {
+  logoutLink = document.querySelector(".logoutLink");
+  emailInput = document.querySelector(".registration-email");
+  passwordInput = document.getElementById("password");
 
   registrationButton = document.querySelector(".registr-button");
   
   registrationButton.onclick = registrationHandle;
-
-
-
 };
-export const cleanupRegistration = () => { };
+
+export const cleanupRegistration = () => {};

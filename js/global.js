@@ -1,9 +1,11 @@
 export const store = {
     transactions: [],
-    isInLogin : false,
+    isInLoginPage : false,
 };
 
-localStorage.setItem("users",[{email:"zuza@",name:"babol",password:"44444"}]);
+// const users = [];
+// const usersString =  JSON.stringify(users)
+// sessionStorage.setItem("users",usersString);
 
 // {
 //     "transactions": [
