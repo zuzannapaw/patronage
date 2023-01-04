@@ -13,11 +13,18 @@ let loggedIn;
 let logoutWrapper;
 let emailInputWrapper;
 let passwordInputWrapper;
-let ulWrapper;
-
 let correctPassword;
 
-let deleteOldErrorMessage;
+//function for delete old error messages - updating view in form 
+let deleteOldErrorMessage = () => {
+    const errorMessages = document.querySelectorAll(".error-message");
+  
+    console.log(`error messages found`);
+  
+    if (errorMessages.length > 0) {
+      errorMessages.forEach(err => err.parentNode.removeChild(err));
+    };
+};
 
 
 //in future maybe helper function for login and registration?
@@ -73,7 +80,7 @@ const loginUser = (e) => {
             message.classList.add("error-message");
             emailInputWrapper.insertAdjacentElement('afterend', message);
 
-        } else if (!correctPassword) {
+        } if (!correctPassword) {
             const message = document.createElement("p");
             message.innerHTML = "Password is not correct.";
             message.classList.add("error-message");
@@ -129,21 +136,6 @@ export const initLogin = () => {
     //for validation
     emailInput = document.getElementById("email");
     passwordInput = document.getElementById('password');
-    
-     //function for delete old error messages - updating view in form
-    deleteOldErrorMessage = () => {
-        const isErrorInLogin = document.querySelector(".wrapper > .error-message");
-        const errorMessage = document.querySelector(".error-message");
-      
-        console.log(`error message ${!!errorMessage}`);
-        console.log(`is error ${!!isErrorInLogin}`)
-      
-        if (!!errorMessage) {
-          if (!!isErrorInLogin) {
-            ulWrapper.removeChild(errorMessage)
-          };
-        };
-      };
 
     loginBtn.onclick = loginUser;
 };

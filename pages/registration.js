@@ -31,7 +31,16 @@ let properPassword;
 let uniqueUsername;
 let uniqueEmail;
 
-let deleteOldErrorMessage;
+//function for delete old error messages - updating view in form 
+let deleteOldErrorMessage = () => {
+  const errorMessages = document.querySelectorAll(".error-message");
+
+  console.log(`error messages found`);
+
+  if (errorMessages.length > 0) {
+    errorMessages.forEach(err => err.parentNode.removeChild(err));
+  };
+};
 
 
 const registrationHandle = (e) => {
@@ -55,7 +64,7 @@ const registrationHandle = (e) => {
   };
 
   // validation start
-  //freeUser if existing user or another user
+  //validation for unique email in case when users array exist and not
   if (users.length > 0) {
     const isUserFree = users.find(user => user.email !== emailInput.value);
     if (isUserFree) {
@@ -65,7 +74,6 @@ const registrationHandle = (e) => {
       console.log('user is not free')
       freeUser = null;
     }
-    //if not user free = error
   } else {
     freeUser = emailInput.value
   };
@@ -74,6 +82,7 @@ const registrationHandle = (e) => {
   properPassword = passwordInput.value.length > 5;
   emailConfirmed = confirmEmailInput.value == emailInput.value;
 
+  //validation for unique username in case when users array exist and not
   if (users.length > 0) {
     const usernameIsTaken = users.find(user => user.username === usernameInput.value);
     if (usernameIsTaken) {
@@ -123,27 +132,30 @@ const registrationHandle = (e) => {
 
     //i will see only first error if there is more during one registration!!!
 
-  } else if (!uniqueEmail) {
-    const message = document.createElement("p");
-    message.innerHTML = "Email duplicated. Insert another email"
-    message.classList.add("error-message");
-    emailInputWrapper.insertAdjacentElement('afterend', message);
-  } else if (!emailConfirmed) {
-    const message = document.createElement("p");
-    message.innerHTML = "Email must be confirmed."
-    message.classList.add("error-message");
-    confirmEmailInputWrapper.insertAdjacentElement('afterend', message);
-  } else if (!uniqueUsername) {
-    const message = document.createElement("p");
-    message.innerHTML = "Username must be unique."
-    message.classList.add("error-message");
-    usernameInputWrapper.insertAdjacentElement('afterend', message);
-  } else if (!properPassword) {
-    const message = document.createElement("p");
-    message.innerHTML = "Password must have at least 6 characters."
-    message.classList.add("error-message");
-    passwordInputWrapper.insertAdjacentElement('afterend', message);
+  } else {
+      if (!uniqueEmail) {
+      const message = document.createElement("p");
+      message.innerHTML = "Email duplicated. Insert another email"
+      message.classList.add("error-message");
+      emailInputWrapper.insertAdjacentElement('afterend', message);
+    } if (!emailConfirmed) {
+      const message = document.createElement("p");
+      message.innerHTML = "Email must be confirmed."
+      message.classList.add("error-message");
+      confirmEmailInputWrapper.insertAdjacentElement('afterend', message);
+    } if (!uniqueUsername) {
+      const message = document.createElement("p");
+      message.innerHTML = "Username must be unique."
+      message.classList.add("error-message");
+      usernameInputWrapper.insertAdjacentElement('afterend', message);
+    } if (!properPassword) {
+      const message = document.createElement("p");
+      message.innerHTML = "Password must have at least 6 characters."
+      message.classList.add("error-message");
+      passwordInputWrapper.insertAdjacentElement('afterend', message);
+    }
   }
+  
 
 };
 
@@ -204,20 +216,21 @@ export const initRegistration = () => {
 
   registrationBtn = document.querySelector(".registration-button");
 
-  //function for delete old error messages - updating view in form
-  deleteOldErrorMessage = () => {
-    const isErrorInLogin = document.querySelector(".wrapper > .error-message")
-    const errorMessage = document.querySelector(".error-message");
+  // //function for delete old error messages - updating view in form
+  // deleteOldErrorMessage = () => {
+  //   // const isErrorInRegistration = document.querySelector(".wrapper > .error-message")
+  //   const errorMessages = document.querySelectorAll(".error-message");
 
-    console.log(`error message ${!!errorMessage}`);
-    console.log(`is error ${!!isErrorInLogin}`)
+  //   console.log(`error messages found`);
+  //   // console.log(`is error ${!!isErrorInRegistration}`)
 
-    if (!!errorMessage) {
-      if (!!isErrorInLogin) {
-        ulWrapper.removeChild(errorMessage)
-      };
-    };
-  };
+  //   if (errorMessages.length > 0) {
+  //     // if (!!isErrorInRegistration) {
+  //       // ulWrapper.removeChild(errorMessage)
+  //     // };
+  //     errorMessages.forEach(err => err.parentNode.removeChild(err));
+  //   };
+  // };
 
   registrationBtn.onclick = registrationHandle;
 };
