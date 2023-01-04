@@ -4,70 +4,93 @@ let emailInput;
 let passwordInput;
 
 let toRegistrationBtn;
-let toLoginBtn; 
-let logoutBtn; 
-let loginBtn
+let toLoginBtn;
+let logoutBtn;
+let loginBtn;
 
-let loggedIn; 
-let liInput;
+let loggedIn;
+
+let logoutWrapper;
+let emailInputWrapper;
+let passwordInputWrapper;
+let ulWrapper;
+
+let correctPassword;
+
+let deleteOldErrorMessage;
 
 
 //in future maybe helper function for login and registration?
 
 const loginUser = (e) => {
-
     e.preventDefault();
+    deleteOldErrorMessage();
+
     const storageUsers = sessionStorage.getItem("users");
     const users = JSON.parse(storageUsers);
 
+    //looking for current user
     const currentUser = users.find(user => user.email === emailInput.value)
-    console.log(currentUser)
+    console.log(`Current user: ${currentUser}`)
 
-    if(currentUser) {
+    if (currentUser) {
+        correctPassword = passwordInput.value === currentUser.password;
+    }else{
+        correctPassword = false;
+    };
+
+    if (currentUser && correctPassword) {
         console.log("login correct");
         const currentUserString = JSON.stringify(currentUser);
-        sessionStorage.setItem("currentUser",currentUserString);
-        window.history.pushState({}, "","/transactions");
-    
-       }else{
-        //inserting message below input BUT ONLY ONCE *
-        liInput = document.querySelector(".form-row");
-        const emailMessage = document.createElement("p");
-        emailMessage.innerHTML= "Insert proper email";
-        emailMessage.classList.add("email-error");
-    
-        liInput.insertAdjacentElement('afterend',emailMessage);
-        return
-    }
+        sessionStorage.setItem("currentUser", currentUserString);
+        const usernameDiv = document.createElement("div");
+        const innerText = `<h4>${currentUser.username}</h4>`
+        usernameDiv.insertAdjacentHTML("afterbegin", innerText)
+        usernameDiv.classList.add("username-div");
+        logoutWrapper.insertAdjacentElement("beforeend", usernameDiv);
 
+        window.history.pushState({}, "", "/transactions");
 
+        //checking for proper navigation display after changing location
+        loggedIn = sessionStorage.getItem("currentUser");
+
+        if (loggedIn) {
+            logoutBtn.style.visibility = "visible";
+            toLoginBtn.style.visibility = "hidden";
+            toRegistrationBtn.style.visibility = "hidden";
+        };
+
+        if (!loggedIn) logoutBtn.style.visibility = "hidden";
+
+        //navigation buttons get to normal position
+        toLoginBtn.style.order = "0";
+        toRegistrationBtn.style.order = "0";
+
+    } else if (!currentUser || !correctPassword) {
+        if (!currentUser) {
+            const message = document.createElement("p");
+            message.innerHTML = "User does not exist yet. Registrate now! ";
+            message.classList.add("error-message");
+            emailInputWrapper.insertAdjacentElement('afterend', message);
+
+        } else if (!correctPassword) {
+            const message = document.createElement("p");
+            message.innerHTML = "Password is not correct.";
+            message.classList.add("error-message");
+            passwordInputWrapper.insertAdjacentElement("afterend", message)
+        };
+
+    };
     //should i do "if" only for possible situation or not to be sure?
+}
 
-     //checking for proper navigation display
-    loggedIn = sessionStorage.getItem("currentUser");
-
-    if (loggedIn) {
-        logoutBtn.style.visibility = "visible";
-        toLoginBtn.style.visibility = "hidden";
-        toRegistrationBtn.style.visibility = "hidden";
-       }
-    
-    if (!loggedIn) logoutBtn.style.visibility = "hidden";
-
-
-    //navigation buttons get to normal position
-    toLoginBtn.style.order = "0";
-    toRegistrationBtn.style.order = "0";
-
-   }
- 
 //this in beforeLoginRender?
 
 export const beforeLoginRender = async () => {
     store.isInLoginPage = true;
     toRegistrationBtn = document.querySelector(".to-registration-page");
     toLoginBtn = document.querySelector(".to-login-page")
-    if(store.isInLoginPage){
+    if (store.isInLoginPage) {
         toLoginBtn.style.visibility = "hidden";
         toRegistrationBtn.style.visibility = "visible";
         toLoginBtn.style.order = "1";
@@ -80,11 +103,11 @@ export const renderLogin = () => `
 <div class="form-wrapper">
     <form>
         <ul class="wrapper">
-            <li class="form-row">
+            <li class="form-row" id="login-email-li">
                 <label>Email</label>
                 <input id="email">
             </li>
-            <li class="form-row">
+            <li class="form-row" id="login-password-li">
                 <label for="password">Hasło</label>
                 <input type="password" id="password">
             </li>
@@ -97,14 +120,32 @@ export const renderLogin = () => `
 `;
 
 export const initLogin = () => {
- logoutBtn= document.querySelector(".logout-btn");
- loginBtn = document.getElementById('login-btn');
- //for validation
- emailInput = document.querySelector('#email');
- passwordInput = document.querySelector('#password');
- //these selectors should be visible by code because navigation is in index.html
+    ulWrapper = document.querySelector(".wrapper");
+    emailInputWrapper = document.getElementById("login-email-li");
+    passwordInputWrapper = document.getElementById("login-password-li");
+    logoutWrapper = document.querySelector(".logoutWrapper");
+    logoutBtn = document.querySelector(".logout-btn");
+    loginBtn = document.getElementById('login-btn');
+    //for validation
+    emailInput = document.getElementById("email");
+    passwordInput = document.getElementById('password');
+    
+     //function for delete old error messages - updating view in form
+    deleteOldErrorMessage = () => {
+        const isErrorInLogin = document.querySelector(".wrapper > .error-message");
+        const errorMessage = document.querySelector(".error-message");
+      
+        console.log(`error message ${!!errorMessage}`);
+        console.log(`is error ${!!isErrorInLogin}`)
+      
+        if (!!errorMessage) {
+          if (!!isErrorInLogin) {
+            ulWrapper.removeChild(errorMessage)
+          };
+        };
+      };
 
- loginBtn.onclick = loginUser;
+    loginBtn.onclick = loginUser;
 };
 
 export const cleanupLogin = () => {

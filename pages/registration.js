@@ -3,91 +3,155 @@ import { store } from '../js/global.js';
 let toRegistrationBtn;
 let toLoginBtn
 
-let loginBtn;
+
 let logoutBtn;
 let registrationBtn;
 
 let emailInput;
+let confirmEmailInput;
 let passwordInput;
-
+let usernameInput;
 
 let navBar;
-let liInput;
+let logoutWrapper;
+let ulWrapper;
+
+//for validation
+let emailInputWrapper;
+let confirmEmailInputWrapper;
+let usernameInputWrapper;
+let passwordInputWrapper;
 
 let freeUser;
 let users;
 let loggedIn;
 
-//if i change value of variable inside function it will be changed in global scope as well?
+let emailConfirmed;
+let properPassword;
+let uniqueUsername;
+let uniqueEmail;
+
+let deleteOldErrorMessage;
 
 
 const registrationHandle = (e) => {
   e.preventDefault();
- 
+
+  deleteOldErrorMessage();
+  ////////////////////////////////
   const storageUsers = sessionStorage.getItem("users");
 
-  if(storageUsers){
+  if (storageUsers) {
     users = JSON.parse(storageUsers);
-  }else{
+  } else {
     users = [];
   }
-  
-  const newUser = {
-  email: emailInput.value,
-  name: JSON.stringify(emailInput.value).substring(-1,1),
-  password: passwordInput.value,
- };
- 
 
+  //creating new user
+  const newUser = {
+    email: emailInput.value,
+    username: usernameInput.value,
+    password: passwordInput.value,
+  };
+
+  // validation start
   //freeUser if existing user or another user
-  if(users.length > 0){
-  freeUser = users.find(user=> user.email !== emailInput.value);
-  }else{
+  if (users.length > 0) {
+    const isUserFree = users.find(user => user.email !== emailInput.value);
+    if (isUserFree) {
+      console.log('user is free')
+      freeUser = emailInput.value
+    } else {
+      console.log('user is not free')
+      freeUser = null;
+    }
+    //if not user free = error
+  } else {
     freeUser = emailInput.value
   };
 
-  //basic validation
-  if(newUser.email === freeUser){
+  uniqueEmail = newUser.email === freeUser;
+  properPassword = passwordInput.value.length > 5;
+  emailConfirmed = confirmEmailInput.value == emailInput.value;
+
+  if (users.length > 0) {
+    const usernameIsTaken = users.find(user => user.username === usernameInput.value);
+    if (usernameIsTaken) {
+      uniqueUsername = false
+    } else {
+      uniqueUsername = usernameInput.value;
+    }
+  } else {
+    uniqueUsername = usernameInput.value;
+  };
+
+  console.log(`uniqueEmail ${uniqueEmail}`)
+  console.log(`uniqueUsername ${uniqueUsername}`)
+  console.log(`properPassword ${properPassword}`)
+  console.log(`emailConfirmed ${emailConfirmed}`)
+
+  //main validation
+  if (uniqueEmail && emailConfirmed && uniqueUsername && properPassword) {
     users.push(newUser);
     const updatedUsersString = JSON.stringify(users);
-    sessionStorage.setItem("users",updatedUsersString);
+    sessionStorage.setItem("users", updatedUsersString);
     const newUserString = JSON.stringify(newUser)
-    sessionStorage.setItem("currentUser",newUserString);
-    window.history.pushState({}, "","/transactions");
-   
+    sessionStorage.setItem("currentUser", newUserString);
+    const usernameDiv = document.createElement("div");
+    const innerText = `<h4>${newUser.username}</h4>`
+    usernameDiv.insertAdjacentHTML("afterbegin", innerText)
+    usernameDiv.classList.add("username-div");
+    logoutWrapper.insertAdjacentElement("beforeend", usernameDiv);
+    window.history.pushState({}, "", "/transactions");
+
+    //for proper navigation display after changing location
+    loggedIn = sessionStorage.getItem("currentUser");
+
+    if (loggedIn) {
+      logoutBtn.style.visibility = "visible";
+      toLoginBtn.style.visibility = "hidden";
+      toRegistrationBtn.style.visibility = "hidden";
+    };
+
+    if (!loggedIn) logoutBtn.style.visibility = "hidden";
+
+    //navigation buttons get to normal position
+    toLoginBtn.style.order = "0";
+    toRegistrationBtn.style.order = "0";
+
     console.log("registration correct")
 
-  }else{
-    liInput = document.querySelector(".form-row");
-    const emailMessage = document.createElement("p");
-    emailMessage.innerHTML= "Email duplicated. Insert another email"
-    emailMessage.classList.add("email-error");
-    liInput.insertAdjacentElement('afterend',emailMessage);
+    //i will see only first error if there is more during one registration!!!
+
+  } else if (!uniqueEmail) {
+    const message = document.createElement("p");
+    message.innerHTML = "Email duplicated. Insert another email"
+    message.classList.add("error-message");
+    emailInputWrapper.insertAdjacentElement('afterend', message);
+  } else if (!emailConfirmed) {
+    const message = document.createElement("p");
+    message.innerHTML = "Email must be confirmed."
+    message.classList.add("error-message");
+    confirmEmailInputWrapper.insertAdjacentElement('afterend', message);
+  } else if (!uniqueUsername) {
+    const message = document.createElement("p");
+    message.innerHTML = "Username must be unique."
+    message.classList.add("error-message");
+    usernameInputWrapper.insertAdjacentElement('afterend', message);
+  } else if (!properPassword) {
+    const message = document.createElement("p");
+    message.innerHTML = "Password must have at least 6 characters."
+    message.classList.add("error-message");
+    passwordInputWrapper.insertAdjacentElement('afterend', message);
   }
 
-  //checking for proper navigation display
-
-  loggedIn = sessionStorage.getItem("currentUser");
-
-  if (loggedIn) {
-    logoutBtn.style.visibility = "visible";
-    loginBtn.style.visibility = "hidden";
-    registrationBtn.style.visibility = "hidden";
-   }
-
-  if (!loggedIn) logoutLink.style.visibility = "hidden";
-
-  //navigation buttons get to normal position
-  toLoginBtn.style.order = "0";
-  toRegistrationBtn.style.order = "0";
- 
 };
 
 export const beforeRegistrationRender = async () => {
   store.isInLoginPage = false;
   navBar = document.getElementById("main-nav");
   toRegistrationBtn = document.querySelector(".to-registration-page");
-  toLoginBtn = document.querySelector(".to-login-page")
+  toLoginBtn = document.querySelector(".to-login-page");
   if (!store.isInLoginPage) {
     toLoginBtn.style.visibility = "visible";
     toRegistrationBtn.style.visibility = "hidden";
@@ -100,17 +164,21 @@ export const beforeRegistrationRender = async () => {
 export const renderRegistration = () => `<div class="form-wrapper">
     <form>
         <ul class="wrapper">
-            <li class="form-row">
-                <label for="password">Hasło</label>
-                <input type="password" id="password">
+            <li class="form-row" id="email-li">
+                <label for="email">Email</label>
+                <input id="email">
               </li>
-          <li class="form-row">
-            <label>Email</label>
-            <input class="registration-email" type="text" id="townborn">
+          <li class="form-row" id="confirm-email-li">
+            <label>Potwierdź email</label>
+            <input class="registration-email" id="confirm-email">
           </li>
-          <li class="form-row">
-            <label for="email">Potwierdź email</label>
-            <input type="email" id="email">
+          <li class="form-row" id="username-li">
+          <label>Nazwa użytkownika</label>
+          <input class="registration-username" type="text" id="username">
+        </li>
+          <li class="form-row" id="password-li">
+            <label for="password">Hasło</label>
+            <input type="password" id="password">
           </li>
           <li class="form-row">
             <button class="registration-button">Zarejestruj</a>
@@ -121,13 +189,37 @@ export const renderRegistration = () => `<div class="form-wrapper">
 `;
 
 export const initRegistration = () => {
+  ulWrapper = document.querySelector(".wrapper")
+  logoutWrapper = document.querySelector(".logoutWrapper");
   logoutBtn = document.querySelector(".logout-btn");
-  emailInput = document.querySelector(".registration-email");
+  emailInput = document.getElementById("email");
+  confirmEmailInput = document.getElementById("confirm-email");
+  usernameInput = document.getElementById("username");
   passwordInput = document.getElementById("password");
 
+  emailInputWrapper = document.getElementById("email-li");
+  confirmEmailInputWrapper = document.getElementById("confirm-email-li");
+  usernameInputWrapper = document.getElementById("username-li");
+  passwordInputWrapper = document.getElementById("password-li");
+
   registrationBtn = document.querySelector(".registration-button");
-  
+
+  //function for delete old error messages - updating view in form
+  deleteOldErrorMessage = () => {
+    const isErrorInLogin = document.querySelector(".wrapper > .error-message")
+    const errorMessage = document.querySelector(".error-message");
+
+    console.log(`error message ${!!errorMessage}`);
+    console.log(`is error ${!!isErrorInLogin}`)
+
+    if (!!errorMessage) {
+      if (!!isErrorInLogin) {
+        ulWrapper.removeChild(errorMessage)
+      };
+    };
+  };
+
   registrationBtn.onclick = registrationHandle;
 };
 
-export const cleanupRegistration = () => {};
+export const cleanupRegistration = () => { };

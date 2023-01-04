@@ -12,7 +12,7 @@
     padding: 3%;
     border-radius: 3px;
     width: 50vw;
-    height: 27vh;
+    height: auto;
 }
 
 .form-row {
@@ -45,4 +45,16 @@
 .email-error{
     color:red;
     margin-left: 36%;
+}
+
+.username-div{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.username-div h4{
+    color:white;
+
+
+
 }

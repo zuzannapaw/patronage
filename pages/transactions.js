@@ -7,6 +7,9 @@ let toLoginBtn;
 let logoutBtn;
 let loggedIn;
 
+let logoutWrapper;
+let usernameDiv;
+
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
@@ -34,6 +37,8 @@ const logoutUser = (e) => {
         toLoginBtn.style.order= "0";
 
     };
+
+    logoutWrapper.removeChild(usernameDiv);
 
     return window.history.pushState({}, "","/");
 
@@ -69,9 +74,12 @@ export const renderTransactions = () => {
 
 export const initTransactions = () => {
 
+
+    logoutWrapper = document.querySelector(".logoutWrapper");
     toRegistrationBtn= document.querySelector(".to-registration-page");
     toLoginBtn = document.querySelector(".to-login-page");
     logoutBtn = document.querySelector(".logout-btn");
+    usernameDiv = document.querySelector(".username-div");
 
     const allTransactions = store.transactions;
 

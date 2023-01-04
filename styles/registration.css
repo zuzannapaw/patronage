@@ -11,7 +11,7 @@
     padding: 3%;
     border-radius: 3px;
     width: 50vw;
-    height: 35vh;
+    height: auto;
 }
 
 .form-row {
@@ -40,4 +40,10 @@
     color: white;
     border: 0;
     cursor:pointer;
+}
+
+.error-message{
+    color:red;
+    font-size: 13px;
+    margin-left: 36%;
 }
