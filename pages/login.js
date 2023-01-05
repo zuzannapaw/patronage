@@ -127,7 +127,6 @@ export const renderLogin = () => `
 `;
 
 export const initLogin = () => {
-    ulWrapper = document.querySelector(".wrapper");
     emailInputWrapper = document.getElementById("login-email-li");
     passwordInputWrapper = document.getElementById("login-password-li");
     logoutWrapper = document.querySelector(".logoutWrapper");

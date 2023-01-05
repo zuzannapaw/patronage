@@ -2,6 +2,9 @@ import { getData } from '../services/api-service.js';
 import { store } from '../js/global.js';
 
 let response;
+let transactions;
+let transactionTypes;
+let currentTransactionType;
 let toRegistrationBtn;
 let toLoginBtn;
 let logoutBtn;
@@ -47,31 +50,40 @@ const logoutUser = (e) => {
 export const beforeTransactionsRender = async () => {
     response = await getData('https://api.npoint.io/38edf0c5f3eb9ac768bd',{});
 
+    //mistake in object's name in database
+    transactions = response.transactions;
+    transactionTypes = response.transacationTypes;
+    // transaction = transactions.find(transaction.type === transactionTypes.keys )
+    console.log(`Transactions types ${transactionTypes}`);
     store.transactions = response.transactions;
-
     const result = { transactions: response.transactions };
+
+    //do i really need store?
 
     return result;
 }
 
 export const renderTransactions = () => {
+    let transactionTypesArray = Object.entries(transactionTypes);
+
     return (`
         <h1>transactions</h1>
         <ul id='transactions-list'>
-            ${response.transactions.map(transaction => (`
+            ${transactions.map(transaction => (`
                 <li>
                     <div id="transaction-${transaction.id}">
                         Transaction ${transaction.description}
                     </div>
                     <p>Data: ${transaction.date}</p>
                     <p>Kwota: ${transaction.amount}</p>
+                    <p> Saldo : ${transaction.balance} </p>
+                    <p>Typ: ${transactionTypesArray.find( keyType => keyType[0] == transaction.type)[1]}</p>
                 </li>
                 `)
     )}
         </ul>
     `)
 };
-
 export const initTransactions = () => {
 
 
