@@ -1,3 +1,20 @@
 #transactions-list li:after {
     content: "";
 }
+
+.doughnut-chart{
+    height:30vh;
+    width:30vw;
+   
+}
+
+.bar-chart{
+    height:30vh;
+    width:30vw;
+}
+
+.charts-wrapper{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}

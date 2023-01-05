@@ -22,7 +22,7 @@ let confirmEmailInputWrapper;
 let usernameInputWrapper;
 let passwordInputWrapper;
 
-let freeUser;
+let freeEmail;
 let users;
 let loggedIn;
 
@@ -66,19 +66,19 @@ const registrationHandle = (e) => {
   // validation start
   //validation for unique email in case when users array exist and not
   if (users.length > 0) {
-    const isUserFree = users.find(user => user.email !== emailInput.value);
-    if (isUserFree) {
+    const emailIsTaken = users.find(user => user.email === emailInput.value);
+    if (emailIsTaken) {
       console.log('user is free')
-      freeUser = emailInput.value
+      freeEmail = false
     } else {
       console.log('user is not free')
-      freeUser = null;
+      freeEmail = emailInput.value;
     }
   } else {
-    freeUser = emailInput.value
+    freeEmail = emailInput.value
   };
 
-  uniqueEmail = newUser.email === freeUser;
+  uniqueEmail = newUser.email === freeEmail;
   properPassword = passwordInput.value.length > 5;
   emailConfirmed = confirmEmailInput.value == emailInput.value;
 
@@ -135,22 +135,22 @@ const registrationHandle = (e) => {
   } else {
       if (!uniqueEmail) {
       const message = document.createElement("p");
-      message.innerHTML = "Email duplicated. Insert another email"
+      message.innerHTML = "Zajęty email. Użyj innego email"
       message.classList.add("error-message");
       emailInputWrapper.insertAdjacentElement('afterend', message);
     } if (!emailConfirmed) {
       const message = document.createElement("p");
-      message.innerHTML = "Email must be confirmed."
+      message.innerHTML = "Email musi być potwierdzony."
       message.classList.add("error-message");
       confirmEmailInputWrapper.insertAdjacentElement('afterend', message);
     } if (!uniqueUsername) {
       const message = document.createElement("p");
-      message.innerHTML = "Username must be unique."
+      message.innerHTML = "Nazwa użytkownika musi być unikalna."
       message.classList.add("error-message");
       usernameInputWrapper.insertAdjacentElement('afterend', message);
     } if (!properPassword) {
       const message = document.createElement("p");
-      message.innerHTML = "Password must have at least 6 characters."
+      message.innerHTML = "Hasło musi składać się conajmniej z 6 znaków."
       message.classList.add("error-message");
       passwordInputWrapper.insertAdjacentElement('afterend', message);
     }

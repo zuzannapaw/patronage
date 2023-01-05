@@ -37,7 +37,7 @@ const loginUser = (e) => {
     const users = JSON.parse(storageUsers);
 
     //looking for current user
-    const currentUser = users.find(user => user.email === emailInput.value)
+    const currentUser = users.find(user => user.email === emailInput.value || user.username === emailInput.value)
     console.log(`Current user: ${currentUser}`)
 
     if (currentUser) {
@@ -76,13 +76,13 @@ const loginUser = (e) => {
     } else if (!currentUser || !correctPassword) {
         if (!currentUser) {
             const message = document.createElement("p");
-            message.innerHTML = "User does not exist yet. Registrate now! ";
+            message.innerHTML = "Użytkownik nie istnieje. Zarejestruj się! ";
             message.classList.add("error-message");
             emailInputWrapper.insertAdjacentElement('afterend', message);
 
         } if (!correctPassword) {
             const message = document.createElement("p");
-            message.innerHTML = "Password is not correct.";
+            message.innerHTML = "Błędne hasło";
             message.classList.add("error-message");
             passwordInputWrapper.insertAdjacentElement("afterend", message)
         };
@@ -111,7 +111,7 @@ export const renderLogin = () => `
     <form>
         <ul class="wrapper">
             <li class="form-row" id="login-email-li">
-                <label>Email</label>
+                <label>Nazwa użytkownika/Email</label>
                 <input id="email">
             </li>
             <li class="form-row" id="login-password-li">
