@@ -76,25 +76,34 @@ export const renderTransactions = () => {
                 <canvas id="myChart2"></canvas>
             </div>
         </div>
-        <ul id='transactions-list'>
-            ${transactions.map(transaction => (`
-                <li>
-                    <div id="transaction-${transaction.id}">
-                        Transaction ${transaction.description}
-                    </div>
-                    <p>Data: ${transaction.date}</p>
-                    <p>Kwota: ${transaction.amount}</p>
-                    <p> Saldo : ${transaction.balance} </p>
-                    <p>Typ: ${transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1]}</p>
-                </li>
-                `)
-    )}
-        </ul>
+        <div class ="transactions-list-wrapper">
+            <ul class="transactions-list">
+                ${transactions.map(transaction => (`
+                    <li class="transaction">
+                        <div class="transaction-data">
+                            <p>${transaction.description}<p>
+                        </div>
+                        <div class="transaction-data">
+                            <p>Data: ${transaction.date}</p>
+                        </div>
+                        <div class="transaction-data">
+                            <p>Kwota: ${transaction.amount}</p>
+                        </div>
+                        <div class="transaction-data">
+                            <p>Saldo : ${transaction.balance} </p>
+                        </div>
+                        <div class="transaction-data">
+                            <p>Typ: ${transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1]}</p>
+                        </div>
+                    </li>
+                    `)
+                )}
+            </ul>
+        </div>
     `)
 };
+
 export const initTransactions = () => {
-
-
     logoutWrapper = document.querySelector(".logoutWrapper");
     toRegistrationBtn = document.querySelector(".to-registration-page");
     toLoginBtn = document.querySelector(".to-login-page");
@@ -103,21 +112,58 @@ export const initTransactions = () => {
 
     //charts
 
+    //doughnut chart
     const ctx = document.getElementById('myChart');
 
+    //creating chart's data
+    const transactions1 = [];
+    const transactions2 = [];
+    const transactions3 = [];
+    const transactions4 = [];
+
+    console.log(transactions)
+
+    transactions.forEach(transaction => {
+        if(transaction.type == 1){
+            transactions1.push(transaction)
+        }
+        if(transaction.type == 2){
+            transactions2.push(transaction)
+        }
+        if(transaction.type == 3){
+            transactions3.push(transaction)
+        }
+        if(transaction.type == 4){
+            transactions4.push(transaction)
+        }
+    });
+
+    const transactions1Length = transactions1.length;
+    const transactions2Length = transactions2.length;
+    const transactions3Length = transactions3.length;
+    const transactions4Length = transactions4.length;
+ 
+    
+    const transactionTypesValues = Object.values(transactionTypes);
+    console.log(transactionTypesValues)
+
+    const transactionTypesValuesArray = transactionTypesValues.map(value=>{
+        return value
+    })
+
+    //chart data
     const data = {
-        labels: [
-            'Red',
-            'Blue',
-            'Yellow'
-        ],
+        labels: transactionTypesValuesArray,
         datasets: [{
-            label: 'My First Dataset',
-            data: [300, 50, 100],
+            labels: [
+                transactionTypesValuesArray,  
+            ],  
+            data: [transactions1Length,transactions2Length,transactions3Length,transactions4Length],
             backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
+                'rgb(255, 205, 86)',
+                'rgb(124,252,0)',
             ],
             hoverOffset: 4
         }]
@@ -129,33 +175,47 @@ export const initTransactions = () => {
     });
 
 
-    ////////
-
+    //bar chart
     const ctx2 = document.getElementById('myChart2');
-//utils?
-    const labels = null;
+
+    //dates
+
+    const transactionsDates = transactions.map(transaction=>{
+        return transaction.date
+    });
+
+    const transactionsDatesSet = new Set(transactionsDates);
+
+    const transactionsDatesArray = Array.from(transactionsDatesSet)
+
+    //balance
+
+    let balanceArray = [];
+
+
+             balanceArray = transactions.map((transaction,i)=>{
+                if(transaction.date)
+                
+             })
+            
+        
+
+    console.log(balanceArray)
+
     const data2 = {
-        labels: labels,
+        labels: transactionsDatesArray,
         datasets: [{
-            label: 'My First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
+            labels: transactionsDatesArray,
+            data: [65, 59, 80],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)'
+                'rgba(255, 205, 45, 0.2)',
             ],
             borderColor: [
                 'rgb(255, 99, 132)',
                 'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)'
+                'rgb(255, 46, 86)',
             ],
             borderWidth: 1
         }]

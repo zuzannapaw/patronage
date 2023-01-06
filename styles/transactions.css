@@ -3,18 +3,59 @@
 }
 
 .doughnut-chart{
-    height:30vh;
-    width:30vw;
+    height:40vh;
+    width:40vw;
    
 }
 
 .bar-chart{
-    height:30vh;
-    width:30vw;
+    height:40vh;
+    width:40vw;
 }
 
 .charts-wrapper{
     display:flex;
     justify-content: center;
     align-items: center;
+}
+
+
+
+.transactions-list-wrapper{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;   
+    width:100%;
+    height:100%;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    }
+
+.transactions-list{
+        width:60em;
+        height:auto;
+        background-color: lightgray;
+        list-style: none;
+}
+
+.transaction{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width:auto;
+    height:3%;
+    border-bottom:1px solid white;
+    font-size: 0.8em;
+    color: #152238;
+
+}
+
+.transaction-data{
+    display: flex;
+    justify-content: space-evenly;
+    padding:2%;
+    text-align: center;
+    width:5em;
+    height:auto;
 }
