@@ -37,7 +37,7 @@
     cursor:pointer;
 
 }
-
+/* correct it */
 #main-nav button:hover, div.logoutWrapper button:hover{
     background-color: rgba(220,220,220,20%);
 }
@@ -46,7 +46,9 @@
     width:90%;
     height:auto;
     display: flex;
-    flex-direction: row-reverse;
-    
-    
+    flex-direction: row-reverse; 
+}
+
+.username-div{
+    font-size: 80%;
 }

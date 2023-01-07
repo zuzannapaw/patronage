@@ -25,6 +25,13 @@
 .form-row>label {
     padding: .5em 1em .5em 0;
     flex: 1;
+    font-size: 0.9em;
+}
+
+/* styles for inpust in login and registration */
+
+#email,#password{
+    height:20%;
 }
 
 .form-row>input {
@@ -36,10 +43,20 @@
     padding: .5em;
 }
 
-.form-row>button {
-    background: gray;
+#login-btn{
+    width:19%;
+    height:14%;
+    background-color:white;
+    color: #23395d;
+    border: 1px solid #23395d;;
+    text-decoration: none;
+    cursor:pointer;
+    transition: .3s;
+}
+
+#login-btn:hover{
+    background-color:#23395d;;
     color: white;
-    border: 0;
 }
 
 .email-error{
@@ -54,7 +71,4 @@
 }
 .username-div h4{
     color:white;
-
-
-
 }

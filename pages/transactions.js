@@ -157,10 +157,10 @@ export const initTransactions = () => {
             labels: [],  
             data: [transactions1Length,transactions2Length,transactions3Length,transactions4Length],
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)',
-                'rgb(124,252,0)',
+                '#6D798C',
+                '#5CE5F2',
+                '#F4B29A',
+                '#BF4736',
             ],
             hoverOffset: 4
         }]
@@ -228,14 +228,14 @@ export const initTransactions = () => {
             label: "Saldo",
             data: balanceArray,
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
+                'rgba(242,132,116, 0.2)',
+                'rgba(92,150,242, 0.2)',
+                'rgba(137,166,55, 0.2)',
             ],
             borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(75, 192, 192)',
-                'rgb(255, 205, 86)',
+                'rgba(242,132,116)',
+                'rgba(92,150,242)',
+                'rgba(137,166,55)',
             ],
             borderWidth: 1
           }],
