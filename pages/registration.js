@@ -28,6 +28,7 @@ let loggedIn;
 
 let emailConfirmed;
 let properPassword;
+let properEmail;
 let uniqueUsername;
 let uniqueEmail;
 
@@ -77,7 +78,7 @@ const registrationHandle = (e) => {
   } else {
     freeEmail = emailInput.value
   };
-
+  properEmail = emailInput.value.includes("@") && emailInput.value.includes(".") ;
   uniqueEmail = newUser.email === freeEmail;
   properPassword = passwordInput.value.length > 5;
   emailConfirmed = confirmEmailInput.value == emailInput.value;
@@ -100,7 +101,7 @@ const registrationHandle = (e) => {
   console.log(`emailConfirmed ${emailConfirmed}`)
 
   //main validation
-  if (uniqueEmail && emailConfirmed && uniqueUsername && properPassword) {
+  if (uniqueEmail && properEmail&& emailConfirmed && uniqueUsername && properPassword ) {
     users.push(newUser);
     const updatedUsersString = JSON.stringify(users);
     sessionStorage.setItem("users", updatedUsersString);
@@ -133,6 +134,12 @@ const registrationHandle = (e) => {
     //i will see only first error if there is more during one registration!!!
 
   } else {
+    if(!properEmail){
+      const message = document.createElement("p");
+      message.innerHTML = `Email musi mieć poprawny format`;
+      message.classList.add("error-message");
+      emailInputWrapper.insertAdjacentElement('afterend', message);
+    }
       if (!uniqueEmail) {
       const message = document.createElement("p");
       message.innerHTML = "Zajęty email. Użyj innego email"

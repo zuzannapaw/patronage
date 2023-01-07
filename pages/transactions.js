@@ -68,6 +68,7 @@ export const renderTransactions = () => {
     let transactionTypesArray = Object.entries(transactionTypes);
 
     return (`
+    <div class = "charts-wrapper-wrapper">
         <div class = "charts-wrapper">
             <div class="doughnut-chart">
                 <canvas id="myChart"></canvas>
@@ -75,6 +76,7 @@ export const renderTransactions = () => {
             <div class="bar-chart">
                 <canvas id="myChart2"></canvas>
             </div>
+        </div>
         </div>
         <div class ="transactions-list-wrapper">
             <ul class="transactions-list">
@@ -121,8 +123,6 @@ export const initTransactions = () => {
     const transactions3 = [];
     const transactions4 = [];
 
-    console.log(transactions)
-
     transactions.forEach(transaction => {
         if(transaction.type == 1){
             transactions1.push(transaction)
@@ -145,7 +145,6 @@ export const initTransactions = () => {
  
     
     const transactionTypesValues = Object.values(transactionTypes);
-    console.log(transactionTypesValues)
 
     const transactionTypesValuesArray = transactionTypesValues.map(value=>{
         return value
@@ -155,9 +154,7 @@ export const initTransactions = () => {
     const data = {
         labels: transactionTypesValuesArray,
         datasets: [{
-            labels: [
-                transactionTypesValuesArray,  
-            ],  
+            labels: [],  
             data: [transactions1Length,transactions2Length,transactions3Length,transactions4Length],
             backgroundColor: [
                 'rgb(255, 99, 132)',
@@ -184,41 +181,64 @@ export const initTransactions = () => {
         return transaction.date
     });
 
+    //this will always be dynamic bcs it depends of transactions.map
     const transactionsDatesSet = new Set(transactionsDates);
 
     const transactionsDatesArray = Array.from(transactionsDatesSet)
 
     //balance
+    // przedzie po wszystkch moich transaction i ma je odpowiednio przydzielic do tablic// 
+    //czy moze stworzyc tablice z obiektami w której key obiektu to beda daty a value to tablice z transactions 
+   
+    // const groupByDate = transactions.groupBy(transaction => {
+    //     return transaction.date;
+    //   });
 
-    let balanceArray = [];
+    const groupByDate= transactions.reduce((group, product) => {
+        const { date } = product;
+        group[date] = group[date] ?? [];
+        group[date].push(product);
+        return group;
+      }, {});
+      console.log(groupByDate);
+
+      let amount;
+      const initialValue = 0;
 
 
-             balanceArray = transactions.map((transaction,i)=>{
-                if(transaction.date)
-                
-             })
-            
-        
+    //   const groupdByDateKeys = Object.keys(groupByDate);
+    //   const groupdByDateValues = Object.values(groupByDate);
 
-    console.log(balanceArray)
+    const groupByDateEntries =  Object.entries(groupByDate);
+
+    console.log(groupByDateEntries)
+
+      const balanceArray = groupByDateEntries.map(value=> {
+        amount = value[1].reduce((acc,transaction) => acc + transaction.amount, initialValue)
+        return amount
+      })
+
+      console.log(balanceArray)
+
+
 
     const data2 = {
         labels: transactionsDatesArray,
         datasets: [{
-            labels: transactionsDatesArray,
-            data: [65, 59, 80],
+            label: "Saldo",
+            data: balanceArray,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 45, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
             ],
             borderColor: [
                 'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 46, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(255, 205, 86)',
             ],
             borderWidth: 1
-        }]
+          }],
     };
 
     new Chart(ctx2, {
@@ -229,7 +249,12 @@ export const initTransactions = () => {
                 y: {
                     beginAtZero: true
                 }
-            }
+            },
+            plugins:{
+            legend: { display: false },
+            title: {display:true,
+            text:"Saldo względem dat transakcji"},
+        }
         },
     });
     ///////
