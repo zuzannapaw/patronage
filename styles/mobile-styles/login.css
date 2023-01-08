@@ -1,0 +1,80 @@
+html{
+    max-width: 100vw;
+    height: 20vh;
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:90vw;
+    height: 50vh;
+}
+
+.wrapper {
+    background-color: whitesmoke;
+    list-style-type: none;
+    padding: 3%;
+    border-radius: 3px;
+    width: 70vw;
+    height:40vh;
+}
+
+.form-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: .5em;
+    margin:3%;
+}
+
+.form-row>label {
+    padding: .5em 1em .5em 0;
+    flex: 1;
+    font-size: 0.9em;
+}
+
+/* styles for inpust in login and registration */
+
+#email,#password{
+    height:20%;
+}
+
+.form-row>input {
+    flex: 2;
+}
+
+.form-row>input,
+.form-row>button {
+    padding: .5em;
+}
+
+#login-btn{
+    width:19%;
+    height:14%;
+    border-radius: 5px;
+    background-color:white;
+    color: #23395d;
+    border: 1px solid #23395d;;
+    text-decoration: none;
+    cursor:pointer;
+    transition: .3s;
+}
+
+#login-btn:hover{
+    background-color:#23395d;;
+    color: white;
+}
+
+.email-error{
+    color:red;
+    margin-left: 36%;
+}
+
+.username-div{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.username-div h4{
+    color:white;
+}

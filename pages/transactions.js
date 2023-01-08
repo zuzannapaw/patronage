@@ -64,56 +64,65 @@ export const beforeTransactionsRender = async () => {
     return result;
 }
 
-export const renderTransactions = () => {
-    let icon;
-    let transactionTypesArray = Object.entries(transactionTypes);
+const getTransaction = (transaction) => {
+    const transactionTypesArray = Object.entries(transactionTypes);
     console.log(transactionTypesArray)
-    //hard coded
-    const iconsArray = [["Wpływy - inne",`<i class="fa-solid fa-arrow-up-to-line icon"></i>`],["Wydatki - zakupy",`<i class="fa-regular fa-cart-shopping icon"></i>`],["Wpływy - wynagrodzenie",`<i class="fa-solid fa-briefcase icon"></i>`],["Wydatki - inne",`<i class="fa-solid fa-arrow-up-from-line icon"></i>`]]
-    const iconArray = iconsArray.forEach((array,i)=>{
-        if(array[0] === transactionTypesArray[i][1]){
-            icon = array[1]
-            }
-        })
-
-        console.log(icon)
-
-        
-   
-    return (`
-    <div class = "charts-wrapper-wrapper">
-        <div class = "charts-wrapper">
-            <div class="doughnut-chart">
-                <canvas id="myChart"></canvas>
-            </div>
-            <div class="bar-chart">
-                <canvas id="myChart2"></canvas>
-            </div>
+    const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
+    const icon = getIcon(transactionType);
+ 
+    return (`<li class="transaction">
+        <div class="transaction-data">
+            <p>${transaction.date}<p>
         </div>
+        <div class="transaction-data">
+            <p class="icon-wrapper">${icon}</p>
+        </div>
+        <div class="transaction-data">
+            <p>${transaction.description}</p>
+        </div>
+        <div class="transaction-data">
+            <p>${transaction.amount} </p>
+        </div>
+        <div class="transaction-data">
+            <p>${transactionType}</p>
+        </div>
+        <div class="transaction-data">
+            <p>${transaction.balance}</p>
+        </div>
+    </li>`)
+};
+
+const getIcon = (transactionType) => {
+    switch (transactionType) {
+        case "Wpływy - inne":
+            return '<i class="fa-solid fa-arrow-up"></i>';
+        case "Wydatki - zakupy":
+            return '<i class="fa-solid fa-cart-arrow-down"></i>';
+        case "Wpływy - wynagrodzenie":
+            return '<i class="fa-solid fa-briefcase"></i>';
+        case "Wydatki - inne":
+            return '<i class="fa-solid fa-arrow-down"></i>';
+        default:
+            return '<i class="fa-solid fa-circle-question"></i>';
+
+    };
+};
+
+export const renderTransactions = () => {
+    return (`
+        <div class = "charts-wrapper-wrapper">
+            <div class = "charts-wrapper">
+                <div class="doughnut-chart">
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class="bar-chart">
+                    <canvas id="myChart2"></canvas>
+                </div>
+            </div>
         </div>
         <div class ="transactions-list-wrapper">
             <ol class="transactions-list">
-                ${transactions.map(transaction => (`<li class="transaction">
-                        <div class="transaction-data">
-                            <p>${transaction.date}<p>
-                        </div>
-                        <div class="transaction-data">
-                            <p class="icon-wrapper">${icon}</p>
-                        </div>
-                        <div class="transaction-data">
-                            <p>${transaction.description}</p>
-                        </div>
-                        <div class="transaction-data">
-                            <p>${transaction.amount} </p>
-                        </div>
-                        <div class="transaction-data">
-                            <p>${transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1]}</p>
-                        </div>
-                        <div class="transaction-data">
-                            <p>${transaction.balance}</p>
-                        </div>
-                    </li>`)
-                )}
+                ${transactions.map(transaction => getTransaction(transaction)).join('')}
             </ol>
         </div> `)
 };

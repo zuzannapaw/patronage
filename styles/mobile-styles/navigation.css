@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Open Sans, sans-serif;
+}
+
+body{
+    max-height: 50vh;
+}
+#main-nav {
+    background-color: #23395d; 
+    height:7vh;
+}
+
+#main-nav button{
+   
+}
+
+#main-nav .logout-btn{
+   
+}
+
+#main-nav button, .logout-btn{
+    text-decoration: none;
+    border:none;
+    background-color: transparent;
+    color:white;
+    transition: .3s;
+    cursor:pointer;
+}
+
+#main-nav button:hover, div.logoutWrapper button:hover{
+    background-color: rgba(220,220,220,20%);
+    border-radius: 5px;
+}
+
+#main-nav div.logoutWrapper{
+   
+}
+
+.username-div{
+    
+}
