@@ -12,15 +12,15 @@
     justify-content: space-around;
     align-items: center;
     height:35vh;
-    width: 70vw;
+    width: 55vh;
     margin-top:3%;
 }
 .doughnut-chart{
     display: flex;
     justify-content: center;
     align-items: center;
-    height:40vh;
-    width:40vw;
+    height:30vh;
+    width:70vw;
     padding-left:10%;
    
 }
@@ -28,8 +28,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height:40vh;
-    width:40vw;
+    height:30vh;
+    width:70vw;
     padding:12%;
 }
 

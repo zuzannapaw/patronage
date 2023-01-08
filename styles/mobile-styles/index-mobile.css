@@ -1,0 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Open Sans, sans-serif;
+}
+
+body {
+    height: 100vh;
+    min-width: 530px;
+    min-height: 740px;
+}

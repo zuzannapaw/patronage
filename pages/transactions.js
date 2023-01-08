@@ -191,6 +191,11 @@ export const initTransactions = () => {
     new Chart(ctx, {
         type: 'doughnut',
         data: data,
+        options:{
+            plugins:{
+                legend: { position: "top",align:"start"},
+        }
+    }
     });
 
 
@@ -241,8 +246,6 @@ export const initTransactions = () => {
       })
 
       console.log(balanceArray)
-
-
 
     const data2 = {
         labels: transactionsDatesArray,

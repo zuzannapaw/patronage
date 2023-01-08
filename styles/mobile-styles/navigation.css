@@ -4,23 +4,17 @@
     font-family: Open Sans, sans-serif;
 }
 
-body{
-    max-height: 50vh;
-}
 #main-nav {
+    display: flex;
+    justify-content: space-around ;
+    align-items: center;
     background-color: #23395d; 
     height:7vh;
+    min-height: 100px;
 }
 
 #main-nav button{
-   
-}
-
-#main-nav .logout-btn{
-   
-}
-
-#main-nav button, .logout-btn{
+    font-size: 1.5em; 
     text-decoration: none;
     border:none;
     background-color: transparent;
@@ -29,15 +23,17 @@ body{
     cursor:pointer;
 }
 
-#main-nav button:hover, div.logoutWrapper button:hover{
-    background-color: rgba(220,220,220,20%);
-    border-radius: 5px;
+.logoutWrapper{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
 }
 
-#main-nav div.logoutWrapper{
-   
+#main-nav .logout-btn{
+    margin-left: 15%;
 }
 
 .username-div{
+    font-size: 1.3em;
     
 }

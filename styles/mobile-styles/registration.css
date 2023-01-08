@@ -1,0 +1,28 @@
+#confirm-email, #username{
+    border:1px solid black;
+    height:30%;
+    width:26%;
+    font-size: 1.2em;
+}
+
+.registration-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:auto;
+    width:45%;
+    min-height:48%;
+    border:0px;
+    border-radius:5px;
+    background-color:#23395d;
+    color: white;
+    text-decoration: none;
+    cursor:pointer;
+    font-size: 1.3em;
+    letter-spacing: 1px;
+}
+
+.error-message{
+    color:red;
+    margin-left: 36%;
+}

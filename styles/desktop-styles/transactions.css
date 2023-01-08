@@ -20,16 +20,15 @@
     justify-content: center;
     align-items: center;
     height:40vh;
-    width:40vw;
+    width:90vw;
     padding-left:10%;
-   
 }
 .bar-chart{
     display: flex;
     justify-content: center;
     align-items: center;
-    height:40vh;
-    width:40vw;
+    height:45vh;
+    width:45vw;
     padding:12%;
 }
 
