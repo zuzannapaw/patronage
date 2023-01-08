@@ -46,6 +46,7 @@
 #login-btn{
     width:19%;
     height:14%;
+    border-radius: 5px;
     background-color:white;
     color: #23395d;
     border: 1px solid #23395d;;

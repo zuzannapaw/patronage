@@ -7,23 +7,17 @@ let toRegistrationBtn ;
 let toLoginBtn;
 let logoutBtn ;
 
-//return?
 const toRegistration = () => {
-
-    return window.history.pushState({}, "","/registration");
-
-}
+    window.history.pushState({}, "","/registration");
+};
 
 const toLogin = () => {
-   return window.history.pushState({}, "","/login");
-}
+    window.history.pushState({}, "","/login");
+};
 
 const logoutHandle = () => {
-   return window.history.pushState({}, "","/");
-
-}
-
-//why attached onclick functions are undefined?
+   window.history.pushState({}, "","/");
+};
 
 const html = `<button class="to-registration-page">Rejestracja</button>
     <button class="to-login-page">Logowanie</button>
@@ -31,8 +25,6 @@ const html = `<button class="to-registration-page">Rejestracja</button>
         <button class="logout-btn">Wyloguj</button>
     </div>
     `
-
-
 navWrapper.insertAdjacentHTML("afterbegin",html)
 
 //html is inserted in other place (index.html) and after that it's redefining variables based on that inserted html and its selectors. 

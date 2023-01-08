@@ -9,6 +9,7 @@ let logoutBtn;
 let loginBtn;
 
 let loggedIn;
+let currentUser;
 
 let logoutWrapper;
 let emailInputWrapper;
@@ -37,14 +38,19 @@ const loginUser = (e) => {
     const users = JSON.parse(storageUsers);
 
     //looking for current user
-    const currentUser = users.find(user => user.email === emailInput.value || user.username === emailInput.value)
-    console.log(`Current user: ${currentUser}`)
+    if(users){
+    currentUser = users.find(user => user.email === emailInput.value || user.username === emailInput.value)
+    console.log(`Current user: ${currentUser}`);
 
     if (currentUser) {
         correctPassword = passwordInput.value === currentUser.password;
     }else{
         correctPassword = false;
-    };
+    }
+}else{
+    currentUser = false;
+    correctPassword = false;
+}
 
     if (currentUser && correctPassword) {
         console.log("login correct");

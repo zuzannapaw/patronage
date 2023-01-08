@@ -13,7 +13,6 @@ let loggedIn;
 let logoutWrapper;
 let usernameDiv;
 
-
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
@@ -53,6 +52,7 @@ export const beforeTransactionsRender = async () => {
 
     //mistake in object's name in database
     transactions = response.transactions;
+    console.log(transactions)
     transactionTypes = response.transacationTypes;
     // transaction = transactions.find(transaction.type === transactionTypes.keys )
     console.log(`Transactions types ${transactionTypes}`);
@@ -65,8 +65,21 @@ export const beforeTransactionsRender = async () => {
 }
 
 export const renderTransactions = () => {
+    let icon;
     let transactionTypesArray = Object.entries(transactionTypes);
+    console.log(transactionTypesArray)
+    //hard coded
+    const iconsArray = [["Wpływy - inne",`<i class="fa-solid fa-arrow-up-to-line icon"></i>`],["Wydatki - zakupy",`<i class="fa-regular fa-cart-shopping icon"></i>`],["Wpływy - wynagrodzenie",`<i class="fa-solid fa-briefcase icon"></i>`],["Wydatki - inne",`<i class="fa-solid fa-arrow-up-from-line icon"></i>`]]
+    const iconArray = iconsArray.forEach((array,i)=>{
+        if(array[0] === transactionTypesArray[i][1]){
+            icon = array[1]
+            }
+        })
 
+        console.log(icon)
+
+        
+   
     return (`
     <div class = "charts-wrapper-wrapper">
         <div class = "charts-wrapper">
@@ -79,30 +92,30 @@ export const renderTransactions = () => {
         </div>
         </div>
         <div class ="transactions-list-wrapper">
-            <ul class="transactions-list">
-                ${transactions.map(transaction => (`
-                    <li class="transaction">
+            <ol class="transactions-list">
+                ${transactions.map(transaction => (`<li class="transaction">
                         <div class="transaction-data">
-                            <p>${transaction.description}<p>
+                            <p>${transaction.date}<p>
                         </div>
                         <div class="transaction-data">
-                            <p>Data: ${transaction.date}</p>
+                            <p class="icon-wrapper">${icon}</p>
                         </div>
                         <div class="transaction-data">
-                            <p>Kwota: ${transaction.amount}</p>
+                            <p>${transaction.description}</p>
                         </div>
                         <div class="transaction-data">
-                            <p>Saldo : ${transaction.balance} </p>
+                            <p>${transaction.amount} </p>
                         </div>
                         <div class="transaction-data">
-                            <p>Typ: ${transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1]}</p>
+                            <p>${transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1]}</p>
                         </div>
-                    </li>
-                    `)
+                        <div class="transaction-data">
+                            <p>${transaction.balance}</p>
+                        </div>
+                    </li>`)
                 )}
-            </ul>
-        </div>
-    `)
+            </ol>
+        </div> `)
 };
 
 export const initTransactions = () => {
