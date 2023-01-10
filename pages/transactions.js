@@ -13,6 +13,8 @@ let loggedIn;
 let logoutWrapper;
 let usernameDiv;
 
+
+
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
@@ -70,26 +72,27 @@ const getTransaction = (transaction) => {
     const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
     const icon = getIcon(transactionType);
 
-    return (`<li class="transaction">
-        <div class="transaction-data">
-            <p>${transaction.date}<p>
+    return (`<li class="transaction transaction-click-on">
+        <div class="transaction-data" id="date_div">
+            <p id="date">${transaction.date}<p>
         </div>
         <div class="transaction-data">
             <p class="icon-wrapper">${icon}</p>
         </div>
         <div class="transaction-data">
-            <div class="description_type">
+            <div class="description_type" id="descriptionType_div">
                 <p id="description">${transaction.description}</p>
                 <p id="type">${transactionType}</p>
             </div>
         </div>
-        <div class="transaction-data">
+        <div class="transaction-data" id="amount_div">
             <p>${transaction.amount} </p>
         </div>
-        <div class="transaction-data">
+        <div class="transaction-data" id="balance_div">
             <p>${transaction.balance}</p>
         </div>
-    </li>`)
+    </li>
+  `)
 };
 
 const getIcon = (transactionType) => {
@@ -283,11 +286,11 @@ export const initTransactions = () => {
                                 return 'rgba(0,0,0,0.1)'
                             }
                         },
-                        lineWidth: function(context){
+                        lineWidth: function (context) {
                             console.log(context)
-                            if(context.tick.value === 0){
+                            if (context.tick.value === 0) {
                                 return 2
-                            }else{
+                            } else {
                                 return 0.5
                             }
                         }
@@ -296,7 +299,7 @@ export const initTransactions = () => {
                         callback: function (value) {
                             if (value === 0) {
                                 return value + " PLN";
-                            } else{
+                            } else {
                                 return value
                             }
                         }
@@ -314,19 +317,22 @@ export const initTransactions = () => {
     });
     ///////
 
-    const allTransactions = store.transactions;
+    // const allTransactions = store.transactions;
 
-    for (const transaction of allTransactions) {
-        const transactionDiv = document.getElementById(`transaction-${transaction.id}`);
+    // for (const transaction of allTransactions) {
+    //     const transactionDiv = document.getElementById(`transaction-${transaction.id}`);
 
-        const onTransactionClick = (_event) => {
-            window.history.pushState({}, "", `/transaction/${transaction.id}`);
-        };
+    //     const onTransactionClick = (_event) => {
+    //         window.history.pushState({}, "", `/transaction/${transaction.id}`);
+    //     };
 
-        if (transactionDiv) {
-            transactionDiv.onclick = onTransactionClick;
-        }
-    }
+    //     if (transactionDiv) {
+    //         transactionDiv.onclick = onTransactionClick;
+    //     }
+    // }
+
+
+
 
     logoutBtn.onclick = logoutUser;
 };

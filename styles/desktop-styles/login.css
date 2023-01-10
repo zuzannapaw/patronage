@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 7vh);
+    height: 92vh;
 }
 
 .wrapper {

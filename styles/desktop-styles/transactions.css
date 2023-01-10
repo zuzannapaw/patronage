@@ -1,93 +1,99 @@
-
-
-.charts-wrapper-wrapper{
+.charts-wrapper-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    height:43vh;
-    width:100%;
+    height: 43vh;
+    width: 100%;
 }
-.charts-wrapper{
-    display:flex;
+
+.charts-wrapper {
+    display: flex;
     justify-content: space-around;
     align-items: center;
-    height:35vh;
+    height: 35vh;
     width: 70vw;
-    margin-top:3%;
-}
-.doughnut-chart{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height:33vh;
-    width:50vw;
-}
-.bar-chart{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height:45vh;
-    width:45vw;
-    padding:12%;
+    margin-top: 3%;
 }
 
-.transactions-list-wrapper{
-    display:flex;
+.doughnut-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 33vh;
+    width: 50vw;
+}
+
+.bar-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45vh;
+    width: 45vw;
+    padding: 12%;
+}
+
+.transactions-list-wrapper {
+    display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;   
-    width:100%;
-    height:38vh;
+    align-items: center;
+    width: 100%;
+    height: 38vh;
     overflow: hidden;
     margin-top: 4%;
     margin-bottom: 1%;
 }
-.transactions-list{
-    width:70em;
-    height:auto;
+
+.transactions-list {
+    width: 70em;
+    height: auto;
     background-color: whitesmoke;
     list-style: none;
-    list-style-type:none;
+    list-style-type: none;
     overflow-y: scroll;
     z-index: 1;
 }
-.transaction{
+
+.transaction {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width:auto;
-    height:11vh;
+    width: auto;
+    height: 11vh;
     border-bottom: 2px solid white;
     font-size: 70%;
     color: #23395d;
     text-decoration: none;
 }
-.transaction-data{
+
+.transaction-data {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    padding:1%;
+    padding: 1%;
     text-align: center;
-    width:10em;
-    height:2em;
+    width: 10em;
+    height: 2em;
 }
 
-.icon-wrapper{
-    width:30%;
-    height:100%;
-}
-.icon{
-    width:50px;
-    height:30px;
-    color:#23395d;
+.icon-wrapper {
+    width: 30%;
+    height: 100%;
 }
 
-.description_type{
-    display:flex;
+.icon {
+    width: 50px;
+    height: 30px;
+    color: #23395d;
+}
+
+.description_type {
+    display: flex;
     flex-direction: column;
 }
 
-#type{
+#type {
     margin-top: 4px;
     font-weight: 600;
 }
+

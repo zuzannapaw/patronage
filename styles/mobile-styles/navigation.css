@@ -14,7 +14,7 @@
 }
 
 #main-nav button{
-    font-size: 1.5em; 
+    font-size: 1.1em; 
     text-decoration: none;
     border:none;
     background-color: transparent;
@@ -31,9 +31,10 @@
 
 #main-nav .logout-btn{
     margin-left: 15%;
+    margin-right: 10%;
 }
 
 .username-div{
-    font-size: 1.3em;
+    font-size: 1em;
     
 }

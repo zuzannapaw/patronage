@@ -6,5 +6,11 @@
 
 body {
     height: 100vh;
-    max-width: 2000px;
+    max-width: 1680px;
+}
+
+@media(min-width: 1680px){
+    body{
+        margin:auto;
+    }
 }
