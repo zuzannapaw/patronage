@@ -19,9 +19,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height:40vh;
-    width:90vw;
-    padding-left:10%;
+    height:33vh;
+    width:50vw;
 }
 .bar-chart{
     display: flex;
@@ -57,9 +56,9 @@
     justify-content: space-around;
     align-items: center;
     width:auto;
-    height:8vh;
+    height:11vh;
     border-bottom: 2px solid white;
-    font-size: 0.7em;
+    font-size: 70%;
     color: #23395d;
     text-decoration: none;
 }
@@ -81,4 +80,14 @@
     width:50px;
     height:30px;
     color:#23395d;
+}
+
+.description_type{
+    display:flex;
+    flex-direction: column;
+}
+
+#type{
+    margin-top: 4px;
+    font-weight: 600;
 }

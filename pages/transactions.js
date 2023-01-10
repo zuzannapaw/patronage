@@ -69,7 +69,7 @@ const getTransaction = (transaction) => {
     console.log(transactionTypesArray)
     const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
     const icon = getIcon(transactionType);
- 
+
     return (`<li class="transaction">
         <div class="transaction-data">
             <p>${transaction.date}<p>
@@ -78,13 +78,13 @@ const getTransaction = (transaction) => {
             <p class="icon-wrapper">${icon}</p>
         </div>
         <div class="transaction-data">
-            <p>${transaction.description}</p>
+            <div class="description_type">
+                <p id="description">${transaction.description}</p>
+                <p id="type">${transactionType}</p>
+            </div>
         </div>
         <div class="transaction-data">
             <p>${transaction.amount} </p>
-        </div>
-        <div class="transaction-data">
-            <p>${transactionType}</p>
         </div>
         <div class="transaction-data">
             <p>${transaction.balance}</p>
@@ -146,16 +146,16 @@ export const initTransactions = () => {
     const transactions4 = [];
 
     transactions.forEach(transaction => {
-        if(transaction.type == 1){
+        if (transaction.type == 1) {
             transactions1.push(transaction)
         }
-        if(transaction.type == 2){
+        if (transaction.type == 2) {
             transactions2.push(transaction)
         }
-        if(transaction.type == 3){
+        if (transaction.type == 3) {
             transactions3.push(transaction)
         }
-        if(transaction.type == 4){
+        if (transaction.type == 4) {
             transactions4.push(transaction)
         }
     });
@@ -164,11 +164,11 @@ export const initTransactions = () => {
     const transactions2Length = transactions2.length;
     const transactions3Length = transactions3.length;
     const transactions4Length = transactions4.length;
- 
-    
+
+
     const transactionTypesValues = Object.values(transactionTypes);
 
-    const transactionTypesValuesArray = transactionTypesValues.map(value=>{
+    const transactionTypesValuesArray = transactionTypesValues.map(value => {
         return value
     })
 
@@ -176,8 +176,8 @@ export const initTransactions = () => {
     const data = {
         labels: transactionTypesValuesArray,
         datasets: [{
-            labels: [],  
-            data: [transactions1Length,transactions2Length,transactions3Length,transactions4Length],
+            labels: [],
+            data: [transactions1Length, transactions2Length, transactions3Length, transactions4Length],
             backgroundColor: [
                 '#6D798C',
                 '#5CE5F2',
@@ -191,11 +191,11 @@ export const initTransactions = () => {
     new Chart(ctx, {
         type: 'doughnut',
         data: data,
-        options:{
-            plugins:{
-                legend: { position: "top",align:"start"},
+        options: {
+            plugins: {
+                legend: { position: "top", align: "start" },
+            }
         }
-    }
     });
 
 
@@ -204,7 +204,7 @@ export const initTransactions = () => {
 
     //dates
 
-    const transactionsDates = transactions.map(transaction=>{
+    const transactionsDates = transactions.map(transaction => {
         return transaction.date
     });
 
@@ -213,57 +213,59 @@ export const initTransactions = () => {
 
     const transactionsDatesArray = Array.from(transactionsDatesSet)
 
-    //balance
-    // przedzie po wszystkch moich transaction i ma je odpowiednio przydzielic do tablic// 
-    //czy moze stworzyc tablice z obiektami w której key obiektu to beda daty a value to tablice z transactions 
-   
-    // const groupByDate = transactions.groupBy(transaction => {
-    //     return transaction.date;
-    //   });
 
-    const groupByDate= transactions.reduce((group, product) => {
+    const groupByDate = transactions.reduce((group, product) => {
         const { date } = product;
         group[date] = group[date] ?? [];
         group[date].push(product);
         return group;
-      }, {});
-      console.log(groupByDate);
+    }, {});
+    console.log(groupByDate);
 
-      let amount;
-      const initialValue = 0;
+    let amount;
+    const initialValue = 0;
 
 
-    //   const groupdByDateKeys = Object.keys(groupByDate);
-    //   const groupdByDateValues = Object.values(groupByDate);
+    const groupByDateEntries = Object.entries(groupByDate);
 
-    const groupByDateEntries =  Object.entries(groupByDate);
-
-    console.log(groupByDateEntries)
-
-      const balanceArray = groupByDateEntries.map(value=> {
-        amount = value[1].reduce((acc,transaction) => acc + transaction.amount, initialValue)
+    const balanceArray = groupByDateEntries.map(value => {
+        amount = value[1].reduce((acc, transaction) => acc + transaction.amount, initialValue)
         return amount
-      })
+    })
 
-      console.log(balanceArray)
+    console.log(balanceArray)
+
+    const barsColorsArray = balanceArray.map(balance => {
+        if (balance < 0) {
+            return 'rgba(255, 99, 132, 0.2)'
+        }
+
+        if (balance > 0) {
+            return 'rgba(137, 166, 55, 0.2)'
+        }
+    })
+
+    const bordersColorsArray = balanceArray.map(balance => {
+        if (balance < 0) {
+            return 'rgb(255, 99, 132)'
+        }
+
+        if (balance > 0) {
+            return 'rgb(137,166,55)'
+        }
+
+    })
+
 
     const data2 = {
         labels: transactionsDatesArray,
         datasets: [{
             label: "Saldo",
             data: balanceArray,
-            backgroundColor: [
-                'rgba(242,132,116, 0.2)',
-                'rgba(92,150,242, 0.2)',
-                'rgba(137,166,55, 0.2)',
-            ],
-            borderColor: [
-                'rgba(242,132,116)',
-                'rgba(92,150,242)',
-                'rgba(137,166,55)',
-            ],
+            backgroundColor: barsColorsArray,
+            borderColor: bordersColorsArray,
             borderWidth: 1
-          }],
+        }],
     };
 
     new Chart(ctx2, {
@@ -272,14 +274,42 @@ export const initTransactions = () => {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
-                }
+                    beginAtZero: true,
+                    grid: {
+                        color: function (context) {
+                            if (context.tick.value === 0) {
+                                return '#23395d'
+                            } else {
+                                return 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        lineWidth: function(context){
+                            console.log(context)
+                            if(context.tick.value === 0){
+                                return 2
+                            }else{
+                                return 0.5
+                            }
+                        }
+                    },
+                    ticks: {
+                        callback: function (value) {
+                            if (value === 0) {
+                                return value + " PLN";
+                            } else{
+                                return value
+                            }
+                        }
+                    }
+                },
             },
-            plugins:{
-            legend: { display: false },
-            title: {display:true,
-            text:"Saldo względem dat transakcji"},
-        }
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Saldo względem dat transakcji"
+                },
+            },
         },
     });
     ///////
