@@ -1,38 +1,36 @@
-.form-wrapper {
+.form-wrapper-registration {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 7vh);
 }
 
-.wrapper {
+.wrapper-registration {
     background-color: whitesmoke;
     list-style-type: none;
     padding: 3%;
     border-radius: 3px;
     width: 50vw;
-    height: auto;
 }
 
-.form-row {
+.form-row-registration {
     display: flex;
     justify-content: flex-end;
     padding: .5em;
     margin:3%;
 }
 
-.form-row>label {
+.form-row-registration >label {
     font-size: 0.9em;
     padding: .5em 1em .5em 0;
     flex: 1;
 }
 
-.form-row>input {
+.form-row-registration >input {
     flex: 2;
 }
 
-.form-row>input,
-.form-row>button {
+.form-row-registration >input,
+.form-row-registration >button {
     padding: .5em;
 }
 
@@ -55,7 +53,9 @@
 
 .error-message{
     color:red;
-    font-size: 13px;
+    font-size: 11px;
     margin-left: 36%;
+    margin-right: 3%;
+    max-height: 15%;
 }
 

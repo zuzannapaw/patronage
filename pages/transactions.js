@@ -342,3 +342,5 @@ export const cleanupTransactions = () => {
     logoutBtn = document.querySelector('.logoutLink');
     logoutBtn.removeEventListener('click', logoutUser);
 };
+
+//switching between pl eng - texts in object 

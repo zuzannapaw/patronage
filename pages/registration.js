@@ -30,6 +30,7 @@ let emailConfirmed;
 let properPassword;
 let properEmail;
 let uniqueUsername;
+let properUsername;
 let uniqueEmail;
 
 //function for delete old error messages - updating view in form 
@@ -43,6 +44,10 @@ let deleteOldErrorMessage = () => {
   };
 };
 
+  //validation for proper username regex 
+const checkUsername = (str) =>{
+  return /^((?=.*[0-9])(?=.*[a-zA-Z]{5,})[a-zA-Z0-9\-\_\/\\]{6,16})$/.test(str);
+}
 
 const registrationHandle = (e) => {
   e.preventDefault();
@@ -50,12 +55,11 @@ const registrationHandle = (e) => {
   deleteOldErrorMessage();
   ////////////////////////////////
   const storageUsers = sessionStorage.getItem("users");
-
   if (storageUsers) {
     users = JSON.parse(storageUsers);
   } else {
     users = [];
-  }
+  };
 
   //creating new user
   const newUser = {
@@ -78,8 +82,11 @@ const registrationHandle = (e) => {
   } else {
     freeEmail = emailInput.value
   };
+
+  //validations for other inputs
   properEmail = emailInput.value.includes("@") && emailInput.value.includes(".") ;
   uniqueEmail = newUser.email === freeEmail;
+  //regex
   properPassword = passwordInput.value.length > 5;
   emailConfirmed = confirmEmailInput.value == emailInput.value;
 
@@ -91,17 +98,20 @@ const registrationHandle = (e) => {
     } else {
       uniqueUsername = usernameInput.value;
     }
-  } else {
+  }else{
     uniqueUsername = usernameInput.value;
   };
-
+//check in console log if registraction passed
   console.log(`uniqueEmail ${uniqueEmail}`)
   console.log(`uniqueUsername ${uniqueUsername}`)
   console.log(`properPassword ${properPassword}`)
   console.log(`emailConfirmed ${emailConfirmed}`)
 
+  const isUserNameValid = checkUsername(usernameInput.value); 
+
+  const isFormValid = uniqueEmail && properEmail&& emailConfirmed && uniqueUsername && isUserNameValid && properPassword;
   //main validation
-  if (uniqueEmail && properEmail&& emailConfirmed && uniqueUsername && properPassword ) {
+  if (isFormValid) {
     users.push(newUser);
     const updatedUsersString = JSON.stringify(users);
     sessionStorage.setItem("users", updatedUsersString);
@@ -131,30 +141,37 @@ const registrationHandle = (e) => {
 
     console.log("registration correct")
 
-    //i will see only first error if there is more during one registration!!!
-
   } else {
     if(!properEmail){
       const message = document.createElement("p");
       message.innerHTML = `Email musi mieć poprawny format`;
       message.classList.add("error-message");
       emailInputWrapper.insertAdjacentElement('afterend', message);
-    }
-      if (!uniqueEmail) {
+
+    }if (!uniqueEmail) {
       const message = document.createElement("p");
       message.innerHTML = "Zajęty email. Użyj innego email"
       message.classList.add("error-message");
       emailInputWrapper.insertAdjacentElement('afterend', message);
+
     } if (!emailConfirmed) {
       const message = document.createElement("p");
       message.innerHTML = "Email musi być potwierdzony."
       message.classList.add("error-message");
       confirmEmailInputWrapper.insertAdjacentElement('afterend', message);
+
     } if (!uniqueUsername) {
       const message = document.createElement("p");
       message.innerHTML = "Nazwa użytkownika musi być unikalna."
       message.classList.add("error-message");
       usernameInputWrapper.insertAdjacentElement('afterend', message);
+
+    } if (!isUserNameValid) {
+      const message = document.createElement("p");
+      message.innerHTML = "Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę"
+      message.classList.add("error-message");
+      usernameInputWrapper.insertAdjacentElement('afterend', message);
+
     } if (!properPassword) {
       const message = document.createElement("p");
       message.innerHTML = "Hasło musi składać się conajmniej z 6 znaków."
@@ -162,8 +179,6 @@ const registrationHandle = (e) => {
       passwordInputWrapper.insertAdjacentElement('afterend', message);
     }
   }
-  
-
 };
 
 export const beforeRegistrationRender = async () => {
@@ -171,6 +186,8 @@ export const beforeRegistrationRender = async () => {
   navBar = document.getElementById("main-nav");
   toRegistrationBtn = document.querySelector(".to-registration-page");
   toLoginBtn = document.querySelector(".to-login-page");
+
+  //to keep proper display of navigation
   if (!store.isInLoginPage) {
     toLoginBtn.style.visibility = "visible";
     toRegistrationBtn.style.visibility = "hidden";
@@ -180,30 +197,28 @@ export const beforeRegistrationRender = async () => {
 
 }
 
-export const renderRegistration = () => `<div class="form-wrapper">
-    <form>
-        <ul class="wrapper">
-            <li class="form-row" id="email-li">
+export const renderRegistration = () => `<div class="form-wrapper-registration">
+        <ul class="wrapper-registration">
+            <li class="form-row-registration" id="email-li">
                 <label for="email">Email</label>
                 <input id="email">
               </li>
-          <li class="form-row" id="confirm-email-li">
+          <li class="form-row-registration" id="confirm-email-li">
             <label>Potwierdź email</label>
             <input class="registration-email" id="confirm-email">
           </li>
-          <li class="form-row" id="username-li">
+          <li class="form-row-registration" id="username-li">
           <label>Nazwa użytkownika</label>
           <input class="registration-username" type="text" id="username">
         </li>
-          <li class="form-row" id="password-li">
+          <li class="form-row-registration" id="password-li">
             <label for="password">Hasło</label>
             <input type="password" id="password">
           </li>
-          <li class="form-row">
+          <li class="form-row-registration">
             <button class="registration-button">Zarejestruj</a>
           </li>
         </ul>
-      </form>
     </div>
 `;
 
@@ -223,22 +238,7 @@ export const initRegistration = () => {
 
   registrationBtn = document.querySelector(".registration-button");
 
-  // //function for delete old error messages - updating view in form
-  // deleteOldErrorMessage = () => {
-  //   // const isErrorInRegistration = document.querySelector(".wrapper > .error-message")
-  //   const errorMessages = document.querySelectorAll(".error-message");
-
-  //   console.log(`error messages found`);
-  //   // console.log(`is error ${!!isErrorInRegistration}`)
-
-  //   if (errorMessages.length > 0) {
-  //     // if (!!isErrorInRegistration) {
-  //       // ulWrapper.removeChild(errorMessage)
-  //     // };
-  //     errorMessages.forEach(err => err.parentNode.removeChild(err));
-  //   };
-  // };
-
+  //onclick
   registrationBtn.onclick = registrationHandle;
 };
 

@@ -1,12 +1,12 @@
 
-.form-wrapper {
+.form-wrapper-login {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 92vh;
 }
 
-.wrapper {
+.wrapper-login {
     background-color: whitesmoke;
     list-style-type: none;
     padding: 3%;
@@ -15,14 +15,14 @@
     height: auto;
 }
 
-.form-row {
+.form-row-login {
     display: flex;
     justify-content: flex-end;
     padding: .5em;
     margin:3%;
 }
 
-.form-row>label {
+.form-row-login>label {
     padding: .5em 1em .5em 0;
     flex: 1;
     font-size: 0.9em;
@@ -34,12 +34,12 @@
     height:20%;
 }
 
-.form-row>input {
+.form-row-login>input {
     flex: 2;
 }
 
-.form-row>input,
-.form-row>button {
+.form-row-login>input,
+.form-row-login>button {
     padding: .5em;
 }
 

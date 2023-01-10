@@ -113,18 +113,18 @@ export const beforeLoginRender = async () => {
 }
 
 export const renderLogin = () => `
-<div class="form-wrapper">
+<div class="form-wrapper-login">
     <form>
-        <ul class="wrapper">
-            <li class="form-row" id="login-email-li">
+        <ul class="wrapper-login">
+            <li class="form-row-login" id="login-email-li">
                 <label>Nazwa użytkownika/Email</label>
                 <input id="email">
             </li>
-            <li class="form-row" id="login-password-li">
+            <li class="form-row-login" id="login-password-li">
                 <label for="password">Hasło</label>
                 <input type="password" id="password">
             </li>
-            <li class="form-row">
+            <li class="form-row-login">
                 <button id="login-btn" class="login">Zaloguj</button>
             </li>
         </ul>
