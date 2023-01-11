@@ -43,6 +43,10 @@ let registration_deleteOldErrorMessage = () => {
   };
 };
 
+const checkEmailAlias = (str) =>{
+  return /^([A-Za-z0-9_\-.+])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,})$/.test(str);
+}
+
   //validation for proper username regex 
 const checkUsername = (str) =>{
   return /^((?=.*[0-9])(?=.*[a-zA-Z]{5,})[a-zA-Z0-9\-\_\/\\]{6,16})$/.test(str);
@@ -105,7 +109,10 @@ const registrationHandle = (e) => {
   console.log(`properPassword ${registration_properPassword}`)
   console.log(`emailConfirmed ${registration_emailConfirmed}`)
 
-  const isUserNameValid = checkUsername(registration_usernameInput.value); 
+  const isEmailAlias = checkEmailAlias(registration_emailInput.value)   
+  const isUserNameValid = checkUsername(registration_usernameInput.value);
+//alias
+  console.log(` email alias ${isEmailAlias}`) 
 
   const isFormValid = registration_uniqueEmail && registration_properEmail && registration_emailConfirmed && registration_uniqueUsername && isUserNameValid && registration_properPassword;
   //main validation
@@ -144,7 +151,7 @@ const registrationHandle = (e) => {
   } else {
     if(!registration_properEmail){
       const message = document.createElement("p");
-      message.innerHTML = `Email musi mieć poprawny format`;
+      message.innerHTML = "Email musi mieć poprawny format";
       message.classList.add("error-message");
       registration_emailInputWrapper.insertAdjacentElement('afterend', message);
 
@@ -156,7 +163,7 @@ const registrationHandle = (e) => {
 
     } if (!registration_emailConfirmed) {
       const message = document.createElement("p");
-      message.innerHTML = "Email musi być potwierdzony."
+      message.innerHTML = `Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email"`
       message.classList.add("error-message");
       registration_confirmEmailInputWrapper.insertAdjacentElement('afterend', message);
 
