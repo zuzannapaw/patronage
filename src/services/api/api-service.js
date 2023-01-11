@@ -1,4 +1,4 @@
-export const getData = async (url, headers) => {
+const getData = async (url, headers) => {
     const response = await fetch(url, {
         headers: {
             'Content-Type': 'application/json',
@@ -7,14 +7,10 @@ export const getData = async (url, headers) => {
     });
     return await response.json();
 }
-
-
-
-
-
+Object.prototype.patronage.setGlobalKey('api_getData', getData);
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-export const postData = async (url = '', data = {}) => {
+const postData = async (url = '', data = {}) => {
     // Default options are marked with *
     const response = await fetch(url, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -31,3 +27,4 @@ export const postData = async (url = '', data = {}) => {
     });
     return response.json(); // parses JSON response into native JavaScript objects
 }
+Object.prototype.patronage.setGlobalKey('api_postData', postData);

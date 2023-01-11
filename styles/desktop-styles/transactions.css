@@ -1,3 +1,4 @@
+
 .charts-wrapper-wrapper {
     display: flex;
     justify-content: center;
@@ -59,7 +60,7 @@
     justify-content: space-around;
     align-items: center;
     width: auto;
-    height: 14vh;
+    height: 11vh;
     border-bottom: 2px solid white;
     font-size: 70%;
     color: #23395d;

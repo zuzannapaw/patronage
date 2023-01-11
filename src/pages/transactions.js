@@ -1,17 +1,17 @@
-import { getData } from '../services/api-service.js';
-import { store } from '../js/global.js';
+const transactionsGetData = Object.prototype.patronage.getGlobalKey('api_getData');
+const transactionsStore = Object.prototype.patronage.getGlobalKey('store');
 
-let response;
-let transactions;
-let transactionTypes;
-let currentTransactionType;
-let toRegistrationBtn;
-let toLoginBtn;
-let logoutBtn;
-let loggedIn;
+let transactions_response;
+let transactions_transactions;
+let transactions_transactionTypes;
+let transactions_currentTransactionType;
+let transactions_toRegistrationBtn;
+let transactions_toLoginBtn;
+let transactions_logoutBtn;
+let transactions_loggedIn;
 
-let logoutWrapper;
-let usernameDiv;
+let transactions_logoutWrapper;
+let transactions_usernameDiv;
 
 
 
@@ -19,13 +19,13 @@ const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
     sessionStorage.removeItem("currentUser");
-    logoutBtn = document.querySelector(".logout-btn");
+    transactions_loggedIn = sessionStorage.getItem("currentUser");
 
-    loggedIn = sessionStorage.getItem("currentUser");
+    console.log(transactions_loggedIn)
 
     //should i do "if" only for possible situation or not to be sure?
 
-    // if(loggedIn){
+    // if(transactions_loggedIn){
     //     logoutLink.style.visibility = "visible";
     //     loginLink.style.visibility = "hidden";
     //     registrationLink.style.visibility = "hidden";
@@ -33,66 +33,70 @@ const logoutUser = (e) => {
 
     //are these conditions necessary? logoutUser and functions only without check if the user is logged in or not?
 
-    if (!loggedIn) {
-        logoutBtn.style.visibility = "hidden";
-        toLoginBtn.style.visibility = "visible";
-        toRegistrationBtn.style.visibility = "visible";
+    if (!transactions_loggedIn) {
+        transactions_logoutBtn.style.visibility = "hidden";
+        transactions_toLoginBtn.style.visibility = "visible";
+        transactions_toRegistrationBtn.style.visibility = "visible";
 
-        toRegistrationBtn.style.order = "0";
-        toLoginBtn.style.order = "0";
+        transactions_toRegistrationBtn.style.order = "0";
+        transactions_toLoginBtn.style.order = "0";
 
     };
 
-    logoutWrapper.removeChild(usernameDiv);
+    transactions_logoutWrapper.removeChild(transactions_usernameDiv);
 
-    return window.history.pushState({}, "", "/");
+    window.location.hash = '/';
 
 };
 
-export const beforeTransactionsRender = async () => {
-    response = await getData('https://api.npoint.io/38edf0c5f3eb9ac768bd', {});
+const beforeTransactionsRender = async () => {
+    console.log('Before render transactions');
+
+    transactions_response = await transactionsGetData('https://api.npoint.io/38edf0c5f3eb9ac768bd', {});
 
     //mistake in object's name in database
-    transactions = response.transactions;
-    console.log(transactions)
-    transactionTypes = response.transacationTypes;
-    // transaction = transactions.find(transaction.type === transactionTypes.keys )
-    console.log(`Transactions types ${transactionTypes}`);
-    store.transactions = response.transactions;
-    const result = { transactions: response.transactions };
+    transactions_transactions = transactions_response.transactions;
+    console.log('API RESPONSE', transactions_transactions, transactions_response)
+    transactions_transactionTypes = transactions_response.transacationTypes;
+    // transaction = transactions_transactions.find(transaction.type === transactions_transactionTypes.keys )
+    console.log(`Transactions types ${transactions_transactionTypes}`);
+    transactionsStore.transactions = transactions_response.transactions;
+    const result = { transactions_transactions: transactions_response.transactions };
 
-    //do i really need store?
+    //do i really need transactionsStore?
 
     return result;
 }
+Object.prototype.patronage.setGlobalKey('page_before_transactions_render', beforeTransactionsRender);
 
 const getTransaction = (transaction) => {
-    const transactionTypesArray = Object.entries(transactionTypes);
+    const transactionTypesArray = Object.entries(transactions_transactionTypes);
     console.log(transactionTypesArray)
     const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
     const icon = getIcon(transactionType);
 
-    return (`<li class="transaction transaction-click-on">
-        <div class="transaction-data" id="date_div">
-            <p id="date">${transaction.date}<p>
-        </div>
-        <div class="transaction-data">
-            <p class="icon-wrapper">${icon}</p>
-        </div>
-        <div class="transaction-data">
-            <div class="description_type" id="descriptionType_div">
-                <p id="description">${transaction.description}</p>
-                <p id="type">${transactionType}</p>
+    return (`
+        <li class="transaction">
+            <div class="transaction-data" id="date_div">
+                <p id="date">${transaction.date}<p>
             </div>
-        </div>
-        <div class="transaction-data" id="amount_div">
-            <p>${transaction.amount} </p>
-        </div>
-        <div class="transaction-data" id="balance_div">
-            <p>${transaction.balance}</p>
-        </div>
-    </li>
-  `)
+            <div class="transaction-data">
+                <p class="icon-wrapper">${icon}</p>
+            </div>
+            <div class="transaction-data">
+                <div class="description_type" id="descriptionType_div">
+                    <p id="description">${transaction.description}</p>
+                    <p id="type">${transactionType}</p>
+                </div>
+            </div>
+            <div class="transaction-data" id="amount_div">
+                <p>${transaction.amount} </p>
+            </div>
+            <div class="transaction-data" id="balance_div">
+                <p>${transaction.balance}</p>
+            </div>
+        </li>
+    `)
 };
 
 const getIcon = (transactionType) => {
@@ -111,7 +115,9 @@ const getIcon = (transactionType) => {
     };
 };
 
-export const renderTransactions = () => {
+const renderTransactions = () => {
+    console.log('Transactions render');
+
     return (`
         <div class = "charts-wrapper-wrapper">
             <div class = "charts-wrapper">
@@ -125,18 +131,21 @@ export const renderTransactions = () => {
         </div>
         <div class ="transactions-list-wrapper">
             <ol class="transactions-list">
-                ${transactions.map(transaction => getTransaction(transaction)).join('')}
+                ${transactions_transactions.map(transaction => getTransaction(transaction)).join('')}
             </ol>
-        </div> `)
+        </div>
+    `)
 };
+Object.prototype.patronage.setGlobalKey('page_transactions_render', renderTransactions);
 
-export const initTransactions = () => {
-    logoutWrapper = document.querySelector(".logoutWrapper");
-    toRegistrationBtn = document.querySelector(".to-registration-page");
-    toLoginBtn = document.querySelector(".to-login-page");
-    logoutBtn = document.querySelector(".logout-btn");
-    usernameDiv = document.querySelector(".username-div");
+const initTransactions = () => {
+    console.log('Transactions init');
 
+    transactions_logoutWrapper = document.querySelector(".logout-wrapper");
+    transactions_toRegistrationBtn = document.querySelector(".to-registration-page");
+    transactions_toLoginBtn = document.querySelector(".to-login-page");
+    transactions_logoutBtn = document.querySelector(".logout-btn");
+    transactions_usernameDiv = document.querySelector(".username-div");
     //charts
 
     //doughnut chart
@@ -148,7 +157,7 @@ export const initTransactions = () => {
     const transactions3 = [];
     const transactions4 = [];
 
-    transactions.forEach(transaction => {
+    transactions_transactions.forEach(transaction => {
         if (transaction.type == 1) {
             transactions1.push(transaction)
         }
@@ -169,7 +178,7 @@ export const initTransactions = () => {
     const transactions4Length = transactions4.length;
 
 
-    const transactionTypesValues = Object.values(transactionTypes);
+    const transactionTypesValues = Object.values(transactions_transactionTypes);
 
     const transactionTypesValuesArray = transactionTypesValues.map(value => {
         return value
@@ -207,17 +216,17 @@ export const initTransactions = () => {
 
     //dates
 
-    const transactionsDates = transactions.map(transaction => {
+    const transactionsDates = transactions_transactions.map(transaction => {
         return transaction.date
     });
 
-    //this will always be dynamic bcs it depends of transactions.map
+    //this will always be dynamic bcs it depends of transactions_transactions.map
     const transactionsDatesSet = new Set(transactionsDates);
 
     const transactionsDatesArray = Array.from(transactionsDatesSet)
 
 
-    const groupByDate = transactions.reduce((group, product) => {
+    const groupByDate = transactions_transactions.reduce((group, product) => {
         const { date } = product;
         group[date] = group[date] ?? [];
         group[date].push(product);
@@ -317,7 +326,7 @@ export const initTransactions = () => {
     });
     ///////
 
-    // const allTransactions = store.transactions;
+    // const allTransactions = transactionsStore.transactions_transactions;
 
     // for (const transaction of allTransactions) {
     //     const transactionDiv = document.getElementById(`transaction-${transaction.id}`);
@@ -334,13 +343,13 @@ export const initTransactions = () => {
 
 
 
-    logoutBtn.onclick = logoutUser;
+    transactions_logoutBtn.onclick = logoutUser;
 };
+Object.prototype.patronage.setGlobalKey('page_transactions_init', initTransactions);
 
-export const cleanupTransactions = () => {
+const cleanupTransactions = () => {
     console.log('cleanupLogin');
-    logoutBtn = document.querySelector('.logoutLink');
-    logoutBtn.removeEventListener('click', logoutUser);
+    transactions_logoutBtn = document.querySelector('.logoutLink');
+    transactions_logoutBtn.removeEventListener('click', logoutUser);
 };
-
-//switching between pl eng - texts in object 
+Object.prototype.patronage.setGlobalKey('page_transactions_cleanup', cleanupTransactions);

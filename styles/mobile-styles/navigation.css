@@ -23,7 +23,7 @@
     cursor:pointer;
 }
 
-.logoutWrapper{
+.logout-wrapper{
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-evenly;

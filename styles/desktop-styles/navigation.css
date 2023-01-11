@@ -35,12 +35,12 @@
     cursor:pointer;
 }
 
-#main-nav button:hover, div.logoutWrapper button:hover{
+#main-nav button:hover, div.logout-wrapper button:hover{
     background-color: rgba(220,220,220,20%);
     border-radius: 5px;
 }
 
-#main-nav div.logoutWrapper{
+#main-nav div.logout-wrapper{
     width:90%;
     height:auto;
     display: flex;
