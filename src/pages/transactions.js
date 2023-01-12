@@ -19,83 +19,6 @@ let transactions_transactionRowsMobile;
 let oneRowClicked = false;
 let allOthersRows = [];
 
-const expandRow = (e) => {
-
-    oneRowClicked = !oneRowClicked;
-    let e_target = e.target;
-
-    if(oneRowClicked){
-        allOthersRows = []
-    }
-
-    console.log("clicked!")
-   
-    //preventing e.target to be the child of row
-    e.stopPropagation();
-    transactions_transactionRowsMobile = document.querySelectorAll(".transaction-expanded-on-mobile")
-
-    //if e.target is div inside li
-    if(e_target.classList.contains("transaction-data")){
-        e_target = e_target.parentElement;
-        console.log(e_target);
-        console.log(" i'm div and above me is my 1st parent element");
-    }else{
-        //and if not, maintain your e.target,because its li element
-        e_target = e.target
-    };
-
-       //if e.target is p inside div
-    if(e_target.classList.contains("transaction-text")){
-        // e_target = e.target.parentElement of that parent Element
-        const e_target_p_parent = e_target.parentElement;
-        e_target = e_target_p_parent.parentElement;
-        console.log(e_target);
-        console.log(" i'm p and above me is my 2nd parent element");
-    }else{
-        //and if not, maintain your e.target,because its li element
-        e_target = e.target
-    };
-
-    //but for fiv transaction-data it does not work. check why
-
-    console.log(e_target)
-
-    //expanding only one row
-
-    transactions_transactionRowsMobile.forEach(row => {
-        if (row.id === e_target.id) {
-            row.classList.toggle("active");
-
-            const childrenOfElement = row.children
-            for (let i = 0; i < childrenOfElement.length; i++) {
-                    childrenOfElement[i].style.display = "block";
-            }
-        };
-    });
-
-
-    if(oneRowClicked){
-        transactions_transactionRows.forEach(row => {
-            if (e_target.id !== row.id) {
-                allOthersRows.push(row)
-            }
-        });
-    };
-
-    if (oneRowClicked) {
-        allOthersRows.forEach(row => {
-            row.onclick = null;
-        })
-    }else{
-        transactions_transactionRows.forEach(row=>{
-            row.onclick = expandRow;
-        })
-    }
-
-    console.log(allOthersRows)
-
-};
-
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
@@ -149,7 +72,29 @@ const beforeTransactionsRender = async () => {
 
 Object.prototype.patronage.setGlobalKey('page_before_transactions_render', beforeTransactionsRender);
 
-function makeId(length) {
+const expandRow = (e, transactionId) => {
+    // console.log("expandedRow works")
+    // e.preventDefault();
+    // if(screen.width < 769){
+    //     const clickedDivId = e.target.id 
+    //     console.log('siema', clickedDivId, transactionId)
+    //     const childWithDetailsSelector  = `#${clickedDivId} > div.transaction-details-mobile`;
+    //     console.log(childWithDetailsSelector);
+    //     const childWithDetails = document.querySelector(`${childWithDetailsSelector}`);
+    //     console.log(JSON.stringify(childWithDetails))
+    //     childWithDetails.style.display = "flex";
+
+    //     const transactionsRowsMobile = document.querySelectorAll(".transaction-details-mobile")
+    //     transactionsRowsMobile.forEach(transactionDetails=>{
+    //         if(transactionDetails.style.display = "flex" && transactionDetails.id !== clickedDivId){
+    //             transactionDetails.style.display = "none"
+    //         }
+    //     })
+    // }
+
+};
+
+const makeId = (length) => {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     let charactersLength = characters.length;
@@ -159,17 +104,11 @@ function makeId(length) {
     return result;
 }
 
-const getTransaction = (transaction) => {
-    const transactionTypesArray = Object.entries(transactions_transactionTypes);
-    console.log(transactionTypesArray)
-    const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
-    const icon = getIcon(transactionType);
-    let id = makeId(5)
-
+const getTransactionWithDetails = (transaction, transactionType, icon) => {
     return (`
-        <li class="transaction transaction-mobile-row" id=${id}>
-            <div class="transaction-data" id="date_div">
-                <p class="transaction-text" id="date">${transaction.date}<p>
+        <div class="transaction-details-mobile">
+            <div class="transaction-data" id="date_div_details">
+            <p class="transaction-text" id="date">${transaction.date}<p>
             </div>
             <div class="transaction-data">
                 <p class="icon-wrapper transaction-text">${icon}</p>
@@ -177,36 +116,69 @@ const getTransaction = (transaction) => {
             <div class="transaction-data">
                 <div class="description_type" id="descriptionType_div">
                     <p class="transaction-text" id="description">${transaction.description}</p>
-                    <p class = "transaction-text" id="type">${transactionType}</p>
+                    <p class = "transaction-text" id="type_details">${transactionType}</p>
                 </div>
             </div>
             <div class="transaction-data" id="amount_div">
                 <p class ="transaction-text">${transaction.amount} </p>
             </div>
-            <div class="transaction-data" id="balance_div">
+            <div class="transaction-data" id="balance_div_details">
                 <p class = "transaction-text">${transaction.balance}</p>
             </div>
-        </li>
-        <li class="transaction transaction-expanded-on-mobile" id=${id}>
-            <div class="transaction-data" id="date_div">
-                <p class="transaction-text" id="date">${transaction.date}<p>
-            </div>
-            <div class="transaction-data">
-                <p class="icon-wrapper transaction-text">${icon}</p>
-            </div>
-            <div class="transaction-data">
-                <div class="description_type" id="descriptionType_div">
-                    <p class="transaction-text" id="description">${transaction.description}</p>
-                    <p class="transaction-text" id="type">${transactionType}</p>
+        </div>
+    `);
+}
+
+const getTransaction = (transaction) => {
+    const transactionTypesArray = Object.entries(transactions_transactionTypes);
+    console.log(transactionTypesArray)
+    const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
+    const icon = getIcon(transactionType);
+    const id = makeId(5);
+
+    return (`
+        <div class="transaction item" id=${id}>
+            <div class ="visible-row title">
+                <div class="transaction-data" id="date_div">
+                    <p class="transaction-text" id="date">${transaction.date}<p>
+                </div>
+                <div class="transaction-data">
+                    <p class="icon-wrapper transaction-text">${icon}</p>
+                </div>
+                <div class="transaction-data">
+                    <div class="description_type" id="descriptionType_div">
+                        <p class="transaction-text" id="description">${transaction.description}</p>
+                        <p class = "transaction-text" id="type">${transactionType}</p>
+                    </div>
+                </div>
+                <div class="transaction-data" id="amount_div">
+                    <p class ="transaction-text">${transaction.amount} </p>
+                </div>
+                <div class="transaction-data" id="balance_div">
+                    <p class = "transaction-text">${transaction.balance}</p>
                 </div>
             </div>
-            <div class="transaction-data" id="amount_div">
-                <p class="transaction-text">${transaction.amount} </p>
+            <div class="transaction-details-mobile box">
+                <div class="transaction-data" id="date_div_details">
+                <p class="transaction-text" id="date">${transaction.date}<p>
+                </div>
+                <div class="transaction-data">
+                    <p class="icon-wrapper transaction-text">${icon}</p>
+                </div>
+                <div class="transaction-data">
+                    <div class="description_type" id="descriptionType_div">
+                        <p class="transaction-text" id="description">${transaction.description}</p>
+                        <p class = "transaction-text" id="type_details">${transactionType}</p>
+                    </div>
+                </div>
+                <div class="transaction-data" id="amount_div">
+                    <p class ="transaction-text">${transaction.amount} </p>
+                </div>
+                <div class="transaction-data" id="balance_div_details">
+                    <p class = "transaction-text">${transaction.balance}</p>
+                </div>
             </div>
-            <div class="transaction-data" id="balance_div">
-                <p class ="transaction-text">${transaction.balance}</p>
-            </div>
-        </li>
+        </div>
     `)
 };
 
@@ -241,9 +213,9 @@ const renderTransactions = () => {
             </div>
         </div>
         <div class ="transactions-list-wrapper">
-            <ol class="transactions-list">
+            <div class="transactions-list accordion">
                 ${transactions_transactions.map(transaction => getTransaction(transaction)).join('')}
-            </ol>
+            </div>
         </div>
     `)
 };
@@ -408,7 +380,6 @@ const initTransactions = () => {
                             }
                         },
                         lineWidth: function (context) {
-                            console.log(context)
                             if (context.tick.value === 0) {
                                 return 2
                             } else {
@@ -437,15 +408,43 @@ const initTransactions = () => {
         },
     });
 
+    const allTransactions = document.querySelectorAll(".transaction")
 
+    allTransactions.forEach(transaction=>{
+        transaction.onclick = expandRow;
 
-    //for it to work from desktop to mobile is needs to be reload ,because function only executes once. When user is already on phone since the first using it works
-    if (screen.width < 769) {
-        transactions_transactionRows.forEach(row => {
-            row.onclick = expandRow;
-        });
+        // const all = transaction.getElementsByTagName('*');
+
+        // for (var i = -1, l = all.length; ++i < l;) {
+        //     const child = all[i];
+        //     child.onclick = (event) => {
+        //         const transactionId = transaction.id;
+        //         return expandRow(event, transactionId);
+        //     }
+        // }
+
+    });
+
+    let titles = document.querySelectorAll('.title');
+    for(i = 0; i < titles.length; i++){
+    titles[i].onclick = function(){
+        this.classList.toggle('active');
+        let box = this.nextElementSibling;
+
+        if(box.style.maxHeight){
+            box.style.maxHeight = null;
+        } else {
+            box.style.maxHeight = box.scrollHeight + 500 +'px'
+        }
+
+        for(j = 0; j < titles.length; j++){
+            if(titles[j] !== this ){
+                titles[j].classList.remove('active');
+                titles[j].nextElementSibling.style.maxHeight = null;
+            }
+        }
     }
-
+    }
 
     transactions_logoutBtn.onclick = logoutUser;
 };

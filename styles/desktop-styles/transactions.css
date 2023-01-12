@@ -100,6 +100,6 @@
 
 /* transaction-expanded-on-mobile must not be displayed on desktop */
 
-.transaction-expanded-mobile{
+.transaction-details-mobile{
     display:none;
 }
