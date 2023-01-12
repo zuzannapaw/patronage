@@ -85,7 +85,6 @@
 }
 
 .icon-wrapper {
-    width: 30%;
     height: 100%;
 }
 
@@ -95,3 +94,14 @@
     color: #23395d;
 }
 
+
+/* initially, display will change  */
+
+.transaction-expanded-on-mobile{
+    display:none;
+}
+
+.active{
+    display:flex;
+    /* if height auto = date div, type, balance div display block/flex */
+}

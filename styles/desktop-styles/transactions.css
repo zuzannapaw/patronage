@@ -98,3 +98,8 @@
     font-weight: 600;
 }
 
+/* transaction-expanded-on-mobile must not be displayed on desktop */
+
+.transaction-expanded-mobile{
+    display:none;
+}

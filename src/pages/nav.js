@@ -47,3 +47,4 @@ nav_logoutBtn.onclick = logoutHandle;
 if (!nav_loggedIn) nav_logoutBtn.style.visibility = "hidden";
 if (nav_loggedIn) nav_toLoginBtn.style.visibility = "hidden";
 if (nav_loggedIn) nav_toRegistrationBtn.style.visibility = "hidden";
+

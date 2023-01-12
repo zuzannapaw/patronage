@@ -13,7 +13,88 @@ let transactions_loggedIn;
 let transactions_logoutWrapper;
 let transactions_usernameDiv;
 
+let transactions_transactionRows;
+let transactions_transactionRowsMobile;
 
+let oneRowClicked = false;
+let allOthersRows = [];
+
+const expandRow = (e) => {
+
+    oneRowClicked = !oneRowClicked;
+    let e_target = e.target;
+
+    if(oneRowClicked){
+        allOthersRows = []
+    }
+
+    console.log("clicked!")
+   
+    //preventing e.target to be the child of row
+    e.stopPropagation();
+    transactions_transactionRowsMobile = document.querySelectorAll(".transaction-expanded-on-mobile")
+
+    //if e.target is div inside li
+    if(e_target.classList.contains("transaction-data")){
+        e_target = e_target.parentElement;
+        console.log(e_target);
+        console.log(" i'm div and above me is my 1st parent element");
+    }else{
+        //and if not, maintain your e.target,because its li element
+        e_target = e.target
+    };
+
+       //if e.target is p inside div
+    if(e_target.classList.contains("transaction-text")){
+        // e_target = e.target.parentElement of that parent Element
+        const e_target_p_parent = e_target.parentElement;
+        e_target = e_target_p_parent.parentElement;
+        console.log(e_target);
+        console.log(" i'm p and above me is my 2nd parent element");
+    }else{
+        //and if not, maintain your e.target,because its li element
+        e_target = e.target
+    };
+
+    //but for fiv transaction-data it does not work. check why
+
+    console.log(e_target)
+
+    //expanding only one row
+
+    transactions_transactionRowsMobile.forEach(row => {
+        if (row.id === e_target.id) {
+            row.classList.toggle("active");
+
+            const childrenOfElement = row.children
+            for (let i = 0; i < childrenOfElement.length; i++) {
+                    childrenOfElement[i].style.display = "block";
+            }
+        };
+    });
+
+
+    if(oneRowClicked){
+        transactions_transactionRows.forEach(row => {
+            if (e_target.id !== row.id) {
+                allOthersRows.push(row)
+            }
+        });
+    };
+
+    if (oneRowClicked) {
+        allOthersRows.forEach(row => {
+            row.onclick = null;
+        })
+    }else{
+        transactions_transactionRows.forEach(row=>{
+            row.onclick = expandRow;
+        })
+    }
+
+    console.log(allOthersRows)
+
+};
 
 const logoutUser = (e) => {
     e.preventDefault();
@@ -63,37 +144,67 @@ const beforeTransactionsRender = async () => {
     transactionsStore.transactions = transactions_response.transactions;
     const result = { transactions_transactions: transactions_response.transactions };
 
-    //do i really need transactionsStore?
-
     return result;
 }
+
 Object.prototype.patronage.setGlobalKey('page_before_transactions_render', beforeTransactionsRender);
+
+function makeId(length) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 
 const getTransaction = (transaction) => {
     const transactionTypesArray = Object.entries(transactions_transactionTypes);
     console.log(transactionTypesArray)
     const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
     const icon = getIcon(transactionType);
+    let id = makeId(5)
 
     return (`
-        <li class="transaction">
+        <li class="transaction transaction-mobile-row" id=${id}>
             <div class="transaction-data" id="date_div">
-                <p id="date">${transaction.date}<p>
+                <p class="transaction-text" id="date">${transaction.date}<p>
             </div>
             <div class="transaction-data">
-                <p class="icon-wrapper">${icon}</p>
+                <p class="icon-wrapper transaction-text">${icon}</p>
             </div>
             <div class="transaction-data">
                 <div class="description_type" id="descriptionType_div">
-                    <p id="description">${transaction.description}</p>
-                    <p id="type">${transactionType}</p>
+                    <p class="transaction-text" id="description">${transaction.description}</p>
+                    <p class = "transaction-text" id="type">${transactionType}</p>
                 </div>
             </div>
             <div class="transaction-data" id="amount_div">
-                <p>${transaction.amount} </p>
+                <p class ="transaction-text">${transaction.amount} </p>
             </div>
             <div class="transaction-data" id="balance_div">
-                <p>${transaction.balance}</p>
+                <p class = "transaction-text">${transaction.balance}</p>
+            </div>
+        </li>
+        <li class="transaction transaction-expanded-on-mobile" id=${id}>
+            <div class="transaction-data" id="date_div">
+                <p class="transaction-text" id="date">${transaction.date}<p>
+            </div>
+            <div class="transaction-data">
+                <p class="icon-wrapper transaction-text">${icon}</p>
+            </div>
+            <div class="transaction-data">
+                <div class="description_type" id="descriptionType_div">
+                    <p class="transaction-text" id="description">${transaction.description}</p>
+                    <p class="transaction-text" id="type">${transactionType}</p>
+                </div>
+            </div>
+            <div class="transaction-data" id="amount_div">
+                <p class="transaction-text">${transaction.amount} </p>
+            </div>
+            <div class="transaction-data" id="balance_div">
+                <p class ="transaction-text">${transaction.balance}</p>
             </div>
         </li>
     `)
@@ -146,6 +257,7 @@ const initTransactions = () => {
     transactions_toLoginBtn = document.querySelector(".to-login-page");
     transactions_logoutBtn = document.querySelector(".logout-btn");
     transactions_usernameDiv = document.querySelector(".username-div");
+    transactions_transactionRows = document.querySelectorAll(".transaction-mobile-row");
     //charts
 
     //doughnut chart
@@ -324,23 +436,15 @@ const initTransactions = () => {
             },
         },
     });
-    ///////
-
-    // const allTransactions = transactionsStore.transactions_transactions;
-
-    // for (const transaction of allTransactions) {
-    //     const transactionDiv = document.getElementById(`transaction-${transaction.id}`);
-
-    //     const onTransactionClick = (_event) => {
-    //         window.history.pushState({}, "", `/transaction/${transaction.id}`);
-    //     };
-
-    //     if (transactionDiv) {
-    //         transactionDiv.onclick = onTransactionClick;
-    //     }
-    // }
 
 
+
+    //for it to work from desktop to mobile is needs to be reload ,because function only executes once. When user is already on phone since the first using it works
+    if (screen.width < 769) {
+        transactions_transactionRows.forEach(row => {
+            row.onclick = expandRow;
+        });
+    }
 
 
     transactions_logoutBtn.onclick = logoutUser;
