@@ -202,6 +202,7 @@ const renderTransactions = () => {
     console.log('Transactions render');
 
     return (`
+        <div class = "charts-wrapper-wrapper">
             <div class = "charts-wrapper">
                 <div class="doughnut-chart">
                     <canvas id="myChart"></canvas>
@@ -215,6 +216,7 @@ const renderTransactions = () => {
             <div class="transactions-list accordion">
                 ${transactions_transactions.map(transaction => getTransaction(transaction)).join('')}
             </div>
+        </div>
     `)
 };
 Object.prototype.patronage.setGlobalKey('page_transactions_render', renderTransactions);
