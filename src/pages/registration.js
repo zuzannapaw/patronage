@@ -36,9 +36,7 @@ let registration_properUsername;
 //function for delete old error messages - updating view in form 
 let registration_deleteOldErrorMessage = () => {
   const errorMessages = document.querySelectorAll(".error-message");
-
   console.log(`error messages found`);
-
   if (errorMessages.length > 0) {
     errorMessages.forEach(err => err.parentNode.removeChild(err));
   };
@@ -46,9 +44,8 @@ let registration_deleteOldErrorMessage = () => {
 
 const checkEmailAndAliases = (str) =>{
   return /^([A-Za-z0-9_\-.+])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,})$/.test(str);
-}
+};
 
-  //validation for proper username regex 
 const checkUsername = (str) =>{
   return /^((?=.*[0-9])(?=.*[a-zA-Z]{5,})[a-zA-Z0-9\-\_\/\\]{6,16})$/.test(str);
 };
@@ -59,7 +56,7 @@ const isEmailUnique = (email, users_storage) => {
     return false; 
   };
   return true;
-}
+};
 
 const isUsernameUnique = (username, users_storage) => {
   const isUsernameTaken = users_storage.find(user=> user.username === username ) 
@@ -67,11 +64,17 @@ const isUsernameUnique = (username, users_storage) => {
     return false;
   }
   return true;
-}
+};
+
+const errorInputDisplay = (str,elementWrapper )=> { 
+  const message = document.createElement("p");
+  message.innerHTML = str;
+  message.classList.add("error-message");
+  elementWrapper.insertAdjacentElement('afterend', message);
+};
 
 const registrationHandle = (e) => {
   e.preventDefault();
-
   registration_deleteOldErrorMessage();
   ////////////////////////////////
   const storageUsers = sessionStorage.getItem("users");
@@ -139,43 +142,25 @@ const registrationHandle = (e) => {
     registration_toRegistrationBtn.style.order = "0";
 
     console.log("registration correct")
-
+   
   } else {
     if (!registration_properEmail) {
-      const message = document.createElement("p");
-      message.innerHTML = "Email musi mieć poprawny format";
-      message.classList.add("error-message");
-      registration_emailInputWrapper.insertAdjacentElement('afterend', message);
+      errorInputDisplay("Email musi mieć poprawny format", registration_emailInputWrapper);
 
     } if (!registration_uniqueEmail) {
-      const message = document.createElement("p");
-      message.innerHTML = "Zajęty email. Użyj innego email"
-      message.classList.add("error-message");
-      registration_emailInputWrapper.insertAdjacentElement('afterend', message);
+      errorInputDisplay("Zajęty email. Użyj innego email", registration_emailInputWrapper);
 
     } if (!registration_confirmedEmail) {
-      const message = document.createElement("p");
-      message.innerHTML = `Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email"`
-      message.classList.add("error-message");
-      registration_confirmEmailInputWrapper.insertAdjacentElement('afterend', message);
-
+      errorInputDisplay(`Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email"`, registration_confirmEmailInputWrapper);
+      
     } if (!registration_uniqueUsername) {
-      const message = document.createElement("p");
-      message.innerHTML = "Nazwa użytkownika musi być unikalna."
-      message.classList.add("error-message");
-      registration_usernameInputWrapper.insertAdjacentElement('afterend', message);
+      errorInputDisplay("Nazwa użytkownika musi być unikalna.", registration_usernameInputWrapper);
 
     } if (!registration_properUsername) {
-      const message = document.createElement("p");
-      message.innerHTML = "Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę"
-      message.classList.add("error-message");
-      registration_usernameInputWrapper.insertAdjacentElement('afterend', message);
-
+      errorInputDisplay("Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę", registration_usernameInputWrapper);
+    
     } if (!registration_properPassword) {
-      const message = document.createElement("p");
-      message.innerHTML = "Hasło musi składać się conajmniej z 6 znaków."
-      message.classList.add("error-message");
-      registration_passwordInputWrapper.insertAdjacentElement('afterend', message);
+      errorInputDisplay("Hasło musi składać się conajmniej z 6 znaków.", registration_passwordInputWrapper);
     }
   }
 };

@@ -21,6 +21,10 @@ let transactions_charts_wrapper_wrapper;
 let oneRowClicked = false;
 let allOthersRows = [];
 
+const hash = new URL(document.URL).hash;
+
+console.log("this is my hash" , hash)
+
 const handleSwipe = (e) =>{
     e.preventDefault()
     const doughnutChart = document.querySelector(".doughnut-chart");
@@ -63,7 +67,7 @@ const logoutUser = (e) => {
         transactions_toLoginBtn.style.order = "0";
 
     };
-
+    const transactions_usernameDiv = document.querySelector(".username-div");
     transactions_logoutWrapper.removeChild(transactions_usernameDiv);
 
     window.location.hash = '/';
@@ -245,7 +249,6 @@ const initTransactions = () => {
     transactions_toRegistrationBtn = document.querySelector(".to-registration-page");
     transactions_toLoginBtn = document.querySelector(".to-login-page");
     transactions_logoutBtn = document.querySelector(".logout-btn");
-    transactions_usernameDiv = document.querySelector(".username-div");
     transactions_transactionRows = document.querySelectorAll(".transaction-mobile-row");
     transactions_charts_wrapper_wrapper = document.querySelector(".charts-wrapper-wrapper");
     //charts
