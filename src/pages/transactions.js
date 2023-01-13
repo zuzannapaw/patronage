@@ -16,8 +16,25 @@ let transactions_usernameDiv;
 let transactions_transactionRows;
 let transactions_transactionRowsMobile;
 
+let transactions_charts_wrapper_wrapper;
+
 let oneRowClicked = false;
 let allOthersRows = [];
+
+const handleSwipe = (e) =>{
+    e.preventDefault()
+    const doughnutChart = document.querySelector(".doughnut-chart");
+    const barChart = document.querySelector(".bar-chart");
+
+    if(barChart.style.display === "flex"){
+        barChart.style.display ="none";
+        doughnutChart.style.display = "flex"
+    }else{
+        barChart.style.display = "flex";
+        doughnutChart.style.display = "none"
+    }
+
+}
 
 const logoutUser = (e) => {
     e.preventDefault();
@@ -230,6 +247,7 @@ const initTransactions = () => {
     transactions_logoutBtn = document.querySelector(".logout-btn");
     transactions_usernameDiv = document.querySelector(".username-div");
     transactions_transactionRows = document.querySelectorAll(".transaction-mobile-row");
+    transactions_charts_wrapper_wrapper = document.querySelector(".charts-wrapper-wrapper");
     //charts
 
     //doughnut chart
@@ -447,6 +465,8 @@ const initTransactions = () => {
         }
     }
     }
+
+    transactions_charts_wrapper_wrapper.ontouchend = handleSwipe;
 
     transactions_logoutBtn.onclick = logoutUser;
 };

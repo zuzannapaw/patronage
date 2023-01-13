@@ -4,6 +4,7 @@
     align-items: center;
     height: 40vh;
     width: 100vw;
+    padding:4%;
 }
 
 .charts-wrapper {
@@ -17,11 +18,11 @@
 
 .doughnut-chart {
     display: none;
-    /* justify-content: center;
+    justify-content: center;
     align-items: center;
     height:30vh;
-    width:0vw;
-    padding-left:10%; */
+    width:100%;
+    padding-left:10%;
 
 }
 
@@ -160,4 +161,8 @@
     padding: 10px;
     border-top: 1px solid #ddd;
     background-color: #fff;
+}
+
+.hidden{
+    display:none;
 }
