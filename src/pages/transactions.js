@@ -202,7 +202,6 @@ const renderTransactions = () => {
     console.log('Transactions render');
 
     return (`
-        <div class = "charts-wrapper-wrapper">
             <div class = "charts-wrapper">
                 <div class="doughnut-chart">
                     <canvas id="myChart"></canvas>
@@ -216,7 +215,6 @@ const renderTransactions = () => {
             <div class="transactions-list accordion">
                 ${transactions_transactions.map(transaction => getTransaction(transaction)).join('')}
             </div>
-        </div>
     `)
 };
 Object.prototype.patronage.setGlobalKey('page_transactions_render', renderTransactions);
@@ -288,9 +286,10 @@ const initTransactions = () => {
         type: 'doughnut',
         data: data,
         options: {
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: "top", align: "start" },
-            }
+            },
         }
     });
 
@@ -368,6 +367,7 @@ const initTransactions = () => {
         type: 'bar',
         data: data2,
         options: {
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -404,7 +404,7 @@ const initTransactions = () => {
                     display: true,
                     text: "Saldo względem dat transakcji"
                 },
-            },
+            }
         },
     });
 

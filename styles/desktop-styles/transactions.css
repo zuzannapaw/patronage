@@ -1,38 +1,25 @@
 
-.charts-wrapper-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* height: 43vh; */
-    width: 100%;
-}
-
 .charts-wrapper {
     display: flex;
-    justify-content: space-around;
     align-items: center;
     height: 35vh;
-    width: 70vw;
+    width:100%;
     margin-top: 3%;
 }
 
 .doughnut-chart {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 33vh;
-    width: 50vw;
+    position:relative;
+    flex-basis:50%;
+    height:100%;
+   
 }
 
 .bar-chart {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 45vh;
-    width: 45vw;
-    padding: 12%;
+    position:relative;
+    flex-basis:50%;
+    height:100%;
+ 
 }
-
 .transactions-list-wrapper {
     display: flex;
     flex-direction: column;
@@ -46,7 +33,7 @@
 }
 
 .transactions-list {
-    width: 70em;
+    width: 100%;
     height: auto;
     background-color: whitesmoke;
     list-style: none;
@@ -57,10 +44,8 @@
 
 .transaction {
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    width: auto;
-    height: 11vh;
+    padding:1%;
     border-bottom: 2px solid white;
     font-size: 70%;
     color: #23395d;
@@ -74,7 +59,6 @@
     padding: 1%;
     text-align: center;
     width: 10em;
-    height: 2em;
 }
 
 .icon-wrapper {
@@ -102,4 +86,18 @@
 
 .transaction-details-mobile{
     display:none;
+}
+
+.visible-row{
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-basis:100%;
+    height:60%;
+}
+
+.transaction-text{
+    display:flex;
+    align-items: center;
+    justify-content: center;
 }
