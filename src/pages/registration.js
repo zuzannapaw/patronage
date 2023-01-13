@@ -26,11 +26,12 @@ let registration_freeEmail;
 let registration_users;
 let registration_loggedIn;
 
-let registration_emailConfirmed;
+let registration_confirmedEmail;
 let registration_properPassword;
 let registration_properEmail;
 let registration_uniqueUsername;
 let registration_uniqueEmail;
+let registration_properUsername; 
 
 //function for delete old error messages - updating view in form 
 let registration_deleteOldErrorMessage = () => {
@@ -43,7 +44,7 @@ let registration_deleteOldErrorMessage = () => {
   };
 };
 
-const checkEmailAlias = (str) =>{
+const checkEmailAndAliases = (str) =>{
   return /^([A-Za-z0-9_\-.+])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,})$/.test(str);
 }
 
@@ -51,6 +52,22 @@ const checkEmailAlias = (str) =>{
 const checkUsername = (str) =>{
   return /^((?=.*[0-9])(?=.*[a-zA-Z]{5,})[a-zA-Z0-9\-\_\/\\]{6,16})$/.test(str);
 };
+
+const isEmailUnique = (email, users_storage) => {
+  const isEmailTaken = users_storage.find(user=> user.email === email); 
+  if(isEmailTaken) {
+    return false; 
+  };
+  return true;
+}
+
+const isUsernameUnique = (username, users_storage) => {
+  const isUsernameTaken = users_storage.find(user=> user.username === username ) 
+  if(isUsernameTaken){
+    return false;
+  }
+  return true;
+}
 
 const registrationHandle = (e) => {
   e.preventDefault();
@@ -71,50 +88,25 @@ const registrationHandle = (e) => {
     password: registration_passwordInput.value,
   };
 
-  // validation start
-  //validation for unique email in case when users array exist and not
-  if (registration_users.length > 0) {
-    const emailIsTaken = registration_users.find(user => user.email === registration_emailInput.value);
-    if (emailIsTaken) {
-      console.log('user is free')
-      registration_freeEmail = false
-    } else {
-      console.log('user is not free')
-      registration_freeEmail = registration_emailInput.value;
-    }
-  } else {
-    registration_freeEmail = registration_emailInput.value
-  };
+  //validation
+  registration_properEmail = checkEmailAndAliases(newUser.email);
+  registration_uniqueEmail = isEmailUnique(newUser.email,registration_users)
+  registration_confirmedEmail = registration_confirmEmailInput.value === newUser.email;
+  registration_properUsername = checkUsername(newUser.username)
+  registration_uniqueUsername = isUsernameUnique(newUser.username, registration_users) 
+  registration_properPassword = newUser.password.length > 5;
 
-  //validations for other inputs
-  registration_properEmail = registration_emailInput.value.includes("@") && registration_emailInput.value.includes(".") ;
-  registration_uniqueEmail = newUser.email === registration_freeEmail;
-  registration_properPassword = registration_passwordInput.value.length > 5;
-  registration_emailConfirmed = registration_confirmEmailInput.value == registration_emailInput.value;
-
-  //validation for unique username in case when users array exist and not
-  if (registration_users.length > 0) {
-    const usernameIsTaken = registration_users.find(user => user.username === registration_usernameInput.value);
-    if (usernameIsTaken) {
-      registration_uniqueUsername = false
-    } else {
-      registration_uniqueUsername = registration_usernameInput.value;
-    }
-  }else{
-    registration_uniqueUsername = registration_usernameInput.value;
-  };
 //check in console log if registraction passed
   console.log(`uniqueEmail ${registration_uniqueEmail}`)
   console.log(`uniqueUsername ${registration_uniqueUsername}`)
   console.log(`properPassword ${registration_properPassword}`)
-  console.log(`emailConfirmed ${registration_emailConfirmed}`)
+  console.log(`emailConfirmed ${registration_confirmedEmail}`)
 
-  const isEmailAlias = checkEmailAlias(registration_emailInput.value)   
-  const isUserNameValid = checkUsername(registration_usernameInput.value);
-//alias
-  console.log(` email alias ${isEmailAlias}`) 
+  const isEmailValid =  registration_properEmail && registration_uniqueEmail && registration_confirmedEmail; 
+  const isUserNameValid = registration_properUsername  && registration_uniqueUsername;
 
-  const isFormValid = registration_uniqueEmail && registration_properEmail && registration_emailConfirmed && registration_uniqueUsername && isUserNameValid && registration_properPassword;
+
+  const isFormValid = isEmailValid && isUserNameValid && registration_properPassword;
   //main validation
   if (isFormValid) {
     registration_users.push(newUser);
@@ -149,19 +141,19 @@ const registrationHandle = (e) => {
     console.log("registration correct")
 
   } else {
-    if(!registration_properEmail){
+    if (!registration_properEmail) {
       const message = document.createElement("p");
       message.innerHTML = "Email musi mieć poprawny format";
       message.classList.add("error-message");
       registration_emailInputWrapper.insertAdjacentElement('afterend', message);
 
-    }if (!registration_uniqueEmail) {
+    } if (!registration_uniqueEmail) {
       const message = document.createElement("p");
       message.innerHTML = "Zajęty email. Użyj innego email"
       message.classList.add("error-message");
       registration_emailInputWrapper.insertAdjacentElement('afterend', message);
 
-    } if (!registration_emailConfirmed) {
+    } if (!registration_confirmedEmail) {
       const message = document.createElement("p");
       message.innerHTML = `Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email"`
       message.classList.add("error-message");
@@ -173,7 +165,7 @@ const registrationHandle = (e) => {
       message.classList.add("error-message");
       registration_usernameInputWrapper.insertAdjacentElement('afterend', message);
 
-    } if (!isUserNameValid) {
+    } if (!registration_properUsername) {
       const message = document.createElement("p");
       message.innerHTML = "Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę"
       message.classList.add("error-message");
