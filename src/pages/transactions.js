@@ -21,10 +21,6 @@ let transactions_charts_wrapper_wrapper;
 let oneRowClicked = false;
 let allOthersRows = [];
 
-const hash = new URL(document.URL).hash;
-
-console.log("this is my hash" , hash)
-
 const handleSwipe = (e) =>{
     e.preventDefault()
     const doughnutChart = document.querySelector(".doughnut-chart");
@@ -37,26 +33,13 @@ const handleSwipe = (e) =>{
         barChart.style.display = "flex";
         doughnutChart.style.display = "none"
     }
-
-}
+};
 
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
     sessionStorage.removeItem("currentUser");
     transactions_loggedIn = sessionStorage.getItem("currentUser");
-
-    console.log(transactions_loggedIn)
-
-    //should i do "if" only for possible situation or not to be sure?
-
-    // if(transactions_loggedIn){
-    //     logoutLink.style.visibility = "visible";
-    //     loginLink.style.visibility = "hidden";
-    //     registrationLink.style.visibility = "hidden";
-    //  };
-
-    //are these conditions necessary? logoutUser and functions only without check if the user is logged in or not?
 
     if (!transactions_loggedIn) {
         transactions_logoutBtn.style.visibility = "hidden";
@@ -65,56 +48,30 @@ const logoutUser = (e) => {
 
         transactions_toRegistrationBtn.style.order = "0";
         transactions_toLoginBtn.style.order = "0";
-
     };
+
     const transactions_usernameDiv = document.querySelector(".username-div");
     transactions_logoutWrapper.removeChild(transactions_usernameDiv);
 
     window.location.hash = '/';
-
 };
 
 const beforeTransactionsRender = async () => {
     console.log('Before render transactions');
-
     transactions_response = await transactionsGetData('https://api.npoint.io/38edf0c5f3eb9ac768bd', {});
 
-    //mistake in object's name in database
+    //mistake in object's name in database, typo in name - "transacationTypes"
     transactions_transactions = transactions_response.transactions;
-    console.log('API RESPONSE', transactions_transactions, transactions_response)
     transactions_transactionTypes = transactions_response.transacationTypes;
-    // transaction = transactions_transactions.find(transaction.type === transactions_transactionTypes.keys )
-    console.log(`Transactions types ${transactions_transactionTypes}`);
     transactionsStore.transactions = transactions_response.transactions;
     const result = { transactions_transactions: transactions_response.transactions };
 
     return result;
-}
+};
 
 Object.prototype.patronage.setGlobalKey('page_before_transactions_render', beforeTransactionsRender);
 
-const expandRow = (e, transactionId) => {
-    // console.log("expandedRow works")
-    // e.preventDefault();
-    // if(screen.width < 769){
-    //     const clickedDivId = e.target.id 
-    //     console.log('siema', clickedDivId, transactionId)
-    //     const childWithDetailsSelector  = `#${clickedDivId} > div.transaction-details-mobile`;
-    //     console.log(childWithDetailsSelector);
-    //     const childWithDetails = document.querySelector(`${childWithDetailsSelector}`);
-    //     console.log(JSON.stringify(childWithDetails))
-    //     childWithDetails.style.display = "flex";
-
-    //     const transactionsRowsMobile = document.querySelectorAll(".transaction-details-mobile")
-    //     transactionsRowsMobile.forEach(transactionDetails=>{
-    //         if(transactionDetails.style.display = "flex" && transactionDetails.id !== clickedDivId){
-    //             transactionDetails.style.display = "none"
-    //         }
-    //     })
-    // }
-
-};
-
+//creating id for transactions row
 const makeId = (length) => {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -123,11 +80,29 @@ const makeId = (length) => {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-}
+};
 
+
+const getIcon = (transactionType) => {
+    switch (transactionType) {
+        case "Wpływy - inne":
+            return '<i class="fa-solid fa-arrow-up"></i>';
+        case "Wydatki - zakupy":
+            return '<i class="fa-solid fa-cart-arrow-down"></i>';
+        case "Wpływy - wynagrodzenie":
+            return '<i class="fa-solid fa-briefcase"></i>';
+        case "Wydatki - inne":
+            return '<i class="fa-solid fa-arrow-down"></i>';
+        default:
+            return '<i class="fa-solid fa-circle-question"></i>';
+    };
+};
+
+
+//get transaction's row with details for expanded row in mobile view
 const getTransactionWithDetails = (transaction, transactionType, icon) => {
     return (`
-        <div class="transaction-details-mobile">
+        <div class="transaction-details-mobile box">
             <div class="transaction-data" id="date_div_details">
             <p class="transaction-text" id="date">${transaction.date}<p>
             </div>
@@ -148,11 +123,17 @@ const getTransactionWithDetails = (transaction, transactionType, icon) => {
             </div>
         </div>
     `);
-}
+};
+
+
+//Creating array full of smaller arrays with key - number type of transaction, and value - name of transaction.
+//finding in parent array a "child array" which index 0 (key:number) the same as transaction.type (passed by "transaction" parameter);
+//because in array transactions i have only number that describes a type of transaction;
+//extract from this child array index [1] which is a value - name of transaction;
 
 const getTransaction = (transaction) => {
     const transactionTypesArray = Object.entries(transactions_transactionTypes);
-    console.log(transactionTypesArray)
+    console.log(transactionTypesArray )
     const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
     const icon = getIcon(transactionType);
     const id = makeId(5);
@@ -179,44 +160,9 @@ const getTransaction = (transaction) => {
                     <p class = "transaction-text">${transaction.balance}</p>
                 </div>
             </div>
-            <div class="transaction-details-mobile box">
-                <div class="transaction-data" id="date_div_details">
-                <p class="transaction-text" id="date">${transaction.date}<p>
-                </div>
-                <div class="transaction-data">
-                    <p class="icon-wrapper transaction-text">${icon}</p>
-                </div>
-                <div class="transaction-data">
-                    <div class="description_type" id="descriptionType_div">
-                        <p class="transaction-text" id="description">${transaction.description}</p>
-                        <p class = "transaction-text" id="type_details">${transactionType}</p>
-                    </div>
-                </div>
-                <div class="transaction-data" id="amount_div">
-                    <p class ="transaction-text">${transaction.amount} </p>
-                </div>
-                <div class="transaction-data" id="balance_div_details">
-                    <p class = "transaction-text">${transaction.balance}</p>
-                </div>
-            </div>
+            ${getTransactionWithDetails(transaction, transactionType, icon)}
         </div>
     `)
-};
-
-const getIcon = (transactionType) => {
-    switch (transactionType) {
-        case "Wpływy - inne":
-            return '<i class="fa-solid fa-arrow-up"></i>';
-        case "Wydatki - zakupy":
-            return '<i class="fa-solid fa-cart-arrow-down"></i>';
-        case "Wpływy - wynagrodzenie":
-            return '<i class="fa-solid fa-briefcase"></i>';
-        case "Wydatki - inne":
-            return '<i class="fa-solid fa-arrow-down"></i>';
-        default:
-            return '<i class="fa-solid fa-circle-question"></i>';
-
-    };
 };
 
 const renderTransactions = () => {
@@ -282,16 +228,11 @@ const initTransactions = () => {
     const transactions3Length = transactions3.length;
     const transactions4Length = transactions4.length;
 
-
     const transactionTypesValues = Object.values(transactions_transactionTypes);
-
-    const transactionTypesValuesArray = transactionTypesValues.map(value => {
-        return value
-    })
 
     //chart data
     const data = {
-        labels: transactionTypesValuesArray,
+        labels: transactionTypesValues,
         datasets: [{
             labels: [],
             data: [transactions1Length, transactions2Length, transactions3Length, transactions4Length],
@@ -321,16 +262,13 @@ const initTransactions = () => {
     const ctx2 = document.getElementById('myChart2');
 
     //dates
-
     const transactionsDates = transactions_transactions.map(transaction => {
         return transaction.date
     });
 
     //this will always be dynamic bcs it depends of transactions_transactions.map
     const transactionsDatesSet = new Set(transactionsDates);
-
     const transactionsDatesArray = Array.from(transactionsDatesSet)
-
 
     const groupByDate = transactions_transactions.reduce((group, product) => {
         const { date } = product;
@@ -338,30 +276,27 @@ const initTransactions = () => {
         group[date].push(product);
         return group;
     }, {});
-    console.log(groupByDate);
-
+   
     let amount;
     const initialValue = 0;
-
 
     const groupByDateEntries = Object.entries(groupByDate);
 
     const balanceArray = groupByDateEntries.map(value => {
         amount = value[1].reduce((acc, transaction) => acc + transaction.amount, initialValue)
         return amount
-    })
+    });
 
-    console.log(balanceArray)
-
+  
     const barsColorsArray = balanceArray.map(balance => {
         if (balance < 0) {
             return 'rgba(255, 99, 132, 0.2)'
-        }
+        };
 
         if (balance > 0) {
             return 'rgba(137, 166, 55, 0.2)'
-        }
-    })
+        };
+    });
 
     const bordersColorsArray = balanceArray.map(balance => {
         if (balance < 0) {
@@ -372,8 +307,7 @@ const initTransactions = () => {
             return 'rgb(137,166,55)'
         }
 
-    })
-
+    });
 
     const data2 = {
         labels: transactionsDatesArray,
@@ -431,48 +365,35 @@ const initTransactions = () => {
         },
     });
 
-    const allTransactions = document.querySelectorAll(".transaction")
-
-    allTransactions.forEach(transaction=>{
-        transaction.onclick = expandRow;
-
-        // const all = transaction.getElementsByTagName('*');
-
-        // for (var i = -1, l = all.length; ++i < l;) {
-        //     const child = all[i];
-        //     child.onclick = (event) => {
-        //         const transactionId = transaction.id;
-        //         return expandRow(event, transactionId);
-        //     }
-        // }
-
-    });
+    //for mobile view, expanding transaction's row 
 
     let titles = document.querySelectorAll('.title');
     for(i = 0; i < titles.length; i++){
-    titles[i].onclick = function(){
-        this.classList.toggle('active');
-        let box = this.nextElementSibling;
+        titles[i].onclick = function(){
+            this.classList.toggle('active');
+            let box = this.nextElementSibling;
 
-        if(box.style.maxHeight){
-            box.style.maxHeight = null;
-        } else {
-            box.style.maxHeight = box.scrollHeight + 500 +'px'
-        }
+            if(box.style.maxHeight){
+                box.style.maxHeight = null;
+            } else {
+                box.style.maxHeight = box.scrollHeight + 500 +'px'
+            };
 
-        for(j = 0; j < titles.length; j++){
-            if(titles[j] !== this ){
-                titles[j].classList.remove('active');
-                titles[j].nextElementSibling.style.maxHeight = null;
-            }
-        }
-    }
-    }
+            for(j = 0; j < titles.length; j++){
+                if(titles[j] !== this ){
+                    titles[j].classList.remove('active');
+                    titles[j].nextElementSibling.style.maxHeight = null;
+                };
+            };
+        };
+    };
 
+    //for mobile view, assing handleSwipe function
     transactions_charts_wrapper_wrapper.ontouchend = handleSwipe;
 
     transactions_logoutBtn.onclick = logoutUser;
 };
+
 Object.prototype.patronage.setGlobalKey('page_transactions_init', initTransactions);
 
 const cleanupTransactions = () => {
