@@ -106,11 +106,7 @@ const handleRegistration = async (e) => {
     const newUserString = JSON.stringify(newUser)
     //setting current user (new registrated) in session storage
     sessionStorage.setItem("currentUser", newUserString);
-    const usernameDiv = document.createElement("div");
-    const innerText = `<h4>${newUser.username}</h4>`
-    usernameDiv.insertAdjacentHTML("afterbegin", innerText)
-    usernameDiv.classList.add("username-div");
-    registration_logoutWrapper.insertAdjacentElement("beforeend", usernameDiv);
+    
     window.location.hash = '#/transactions';
 
     // geting current user for proper navigation display after changing location

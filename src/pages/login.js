@@ -9,7 +9,6 @@ let login_toLoginBtn;
 let login_logoutBtn;
 let login_loginBtn;
 
-let login_logoutWrapper;
 let login_emailInputWrapper;
 let login_passwordInputWrapper;
 
@@ -60,11 +59,6 @@ const handleLogin = async (e) => {
         console.log("login correct");
         const currentUserString = JSON.stringify(currentUser);
         sessionStorage.setItem("currentUser", currentUserString);
-        const usernameDiv = document.createElement("div");
-        const innerText = `<h4>${currentUser.username}</h4>`
-        usernameDiv.insertAdjacentHTML("afterbegin", innerText)
-        usernameDiv.classList.add("username-div");
-        login_logoutWrapper.insertAdjacentElement("beforeend", usernameDiv);
 
         window.location.hash = '#/transactions';
 
@@ -135,7 +129,6 @@ const initLogin = () => {
     //defining all necessary elments that will be used later (f.ex. in handleLogin function)
     login_emailInputWrapper = document.getElementById("login-email-li");
     login_passwordInputWrapper = document.getElementById("login-password-li");
-    login_logoutWrapper = document.querySelector(".logout-wrapper");
     login_logoutBtn = document.querySelector(".logout-btn");
     login_loginBtn = document.getElementById('login-btn');
     login_emailInput = document.getElementById("email");

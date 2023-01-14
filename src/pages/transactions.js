@@ -39,7 +39,6 @@ const handleSwipe = () =>{
         console.log("im bar chart im flex")
         barChart.style.display = "none"
         doughnutChart.style.display = "flex"
-      
     }else{
         console.log("im bar chart im none")
         barChart.style.display = "flex"
@@ -73,6 +72,20 @@ const handleOnTouchEnd = (e) => {
     }
 };
 
+const getGroupedByDate = (transactions) => {
+      //this will always be dynamic bcs it depends of transactions_transactions.map
+      const groupByDate = transactions.reduce((group, product) => {
+        const { date } = product;
+        group[date] = group[date] ?? [];
+        group[date].push(product);
+        return group;
+    }, {});
+
+    const groupByDateEntries = Object.entries(groupByDate);
+
+    return groupByDateEntries;
+};
+
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
@@ -89,6 +102,7 @@ const logoutUser = (e) => {
     };
 
     const transactions_usernameDiv = document.querySelector(".username-div");
+
     transactions_logoutWrapper.removeChild(transactions_usernameDiv);
 
     window.location.hash = '/';
@@ -97,6 +111,17 @@ const logoutUser = (e) => {
 const beforeTransactionsRender = async () => {
     console.log('Before render transactions');
     transactions_response = await transactionsGetData('https://api.npoint.io/38edf0c5f3eb9ac768bd', {});
+
+    const isCurrentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+    if(isCurrentUser){
+        const  transactions_logoutWrapper = document.querySelector(".logout-wrapper");
+        const usernameDiv = document.createElement("div");
+        const innerText = `<h4>${isCurrentUser.username}</h4>`
+        usernameDiv.insertAdjacentHTML("afterbegin", innerText)
+        usernameDiv.classList.add("username-div");
+        transactions_logoutWrapper.insertAdjacentElement("beforeend", usernameDiv);
+    }
 
     //mistake in object's name in database, typo in name - "transacationTypes"
     transactions_transactions = transactions_response.transactions;
@@ -204,7 +229,12 @@ const getTransaction = (transaction) => {
 
 const renderTransactions = () => {
     console.log('Transactions render');
-
+    const groupByDateEntries = getGroupedByDate(transactions_transactions);
+ 
+    const transactionsWithLabels = groupByDateEntries.map(element => {
+        const transactions = element[1].map(transaction => getTransaction(transaction)).join('');
+        return `<div class="transaction-label"><p>${element[0]}</p></div>` + `${transactions}`;
+    }).join('');
     return (`
         <div class = "charts-wrapper-wrapper">
             <div class = "charts-wrapper">
@@ -218,7 +248,7 @@ const renderTransactions = () => {
         </div>
         <div class ="transactions-list-wrapper">
             <div class="transactions-list accordion">
-                ${transactions_transactions.map(transaction => getTransaction(transaction)).join('')}
+                ${transactionsWithLabels}
             </div>
         </div>
     `)
@@ -307,17 +337,10 @@ const initTransactions = () => {
     const transactionsDatesSet = new Set(transactionsDates);
     const transactionsDatesArray = Array.from(transactionsDatesSet)
 
-    const groupByDate = transactions_transactions.reduce((group, product) => {
-        const { date } = product;
-        group[date] = group[date] ?? [];
-        group[date].push(product);
-        return group;
-    }, {});
-   
+    const groupByDateEntries = getGroupedByDate(transactions_transactions);
+
     let amount;
     const initialValue = 0;
-
-    const groupByDateEntries = Object.entries(groupByDate);
 
     const balanceArray = groupByDateEntries.map(value => {
         amount = value[1].reduce((acc, transaction) => acc + transaction.amount, initialValue)
