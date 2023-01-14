@@ -4,12 +4,12 @@ const page_not_found_storeInLogin = Object.prototype.patronage.getGlobalKey('sto
 const beforeRender404  = () => {
     console.log('Before 404 render');
 
-   page_not_found_storeInLogin.isInLoginPage = false;
+   unauthorized_storeInLogin.isInLoginPage = false;
    Object.prototype.patronage.setGlobalKey('store',storeInLogin);
    
     const page_not_found_toRegistrationBtn = document.querySelector(".to-registration-page");
     const page_not_found_toLoginBtn = document.querySelector(".to-login-page")
-    if (!page_not_found_storeInLogin.isInLoginPage) {
+    if (!unauthorized_storeInLogin.isInLoginPage) {
         page_not_found_toLoginBtn.style.visibility = "visible";
         page_not_found_toRegistrationBtn.style.visibility = "visible";
         page_not_found_toLoginBtn.style.order = "0";

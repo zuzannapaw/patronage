@@ -5,6 +5,12 @@ const page_404_render = Object.prototype.patronage.getGlobalKey('page_404_render
 const page_404_init = Object.prototype.patronage.getGlobalKey('page_404_init');
 const page_404_cleanup = Object.prototype.patronage.getGlobalKey('page_404_cleanup');
 
+//Unauthorized
+const page_unauthorized_before_render = Object.prototype.patronage.getGlobalKey('page_unauthorized_before_render');
+const page_unauthorized_render = Object.prototype.patronage.getGlobalKey('page_unauthorized_render');
+const page_unauthorized_init = Object.prototype.patronage.getGlobalKey('page_unauthorized_init');
+const page_unauthorized_cleanup = Object.prototype.patronage.getGlobalKey('page_unauthorized_cleanup');
+
 // Home
 const page_before_home_render = Object.prototype.patronage.getGlobalKey('page_before_home_render');
 const page_home_render = Object.prototype.patronage.getGlobalKey('page_home_render');
@@ -36,6 +42,12 @@ const routes = {
         init: page_404_init,
         cleanup: page_404_cleanup
     },
+    '/unauthorized': {
+        beforeRender: page_unauthorized_before_render,
+        render: page_unauthorized_render,
+        init: page_unauthorized_init,
+        cleanup: page_unauthorized_cleanup
+    },
     '/': {
         beforeRender: page_before_home_render,
         render: page_home_render,
@@ -60,7 +72,22 @@ const routes = {
         init: page_transactions_init,
         cleanup: page_transactions_cleanup
     },
-}
+};
+
+
+const getRoute = (location) => {
+
+    const router_currentUser = sessionStorage.getItem("currentUser");
+    if(!router_currentUser && location === '/transactions') {
+        return routes['/unauthorized'];
+    }
+
+    if(router_currentUser && (location === '/login' ||  location === '/registration')) {
+        return routes['/transactions'];
+    }
+    return routes[location] || routes[404];
+
+};
 
 // https://dev.to/thedevdrawer/single-page-application-routing-using-hash-or-url-9jh
 const locationHandler = async () => {
@@ -72,8 +99,8 @@ const locationHandler = async () => {
     }
 
     // get the route object from the routes object
-    const route = routes[location] || routes[404];
-
+    const route = getRoute(location);
+  
     let beforeResult;
 
     if (route.beforeRender) {

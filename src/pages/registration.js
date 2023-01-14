@@ -1,11 +1,12 @@
 
 const registrationStore = Object.prototype.patronage.getGlobalKey('store');
+const registration_createHash = Object.prototype.patronage.getGlobalKey('createHash');
 
-let registration_toLoginBtn
+let registration_toLoginBtn;
 let registration_logoutBtn;
-let registration_toRegistrationBtn
+let registration_toRegistrationBtn;
 
-let registration_registrationBtn
+let registration_registrationBtn;
 
 let registration_emailInput;
 let registration_confirmEmailInput;
@@ -22,19 +23,9 @@ let registration_confirmEmailInputWrapper;
 let registration_usernameInputWrapper;
 let registration_passwordInputWrapper;
 
-let registration_freeEmail;
-let registration_users;
-let registration_loggedIn;
-
-let registration_confirmedEmail;
-let registration_properPassword;
-let registration_properEmail;
-let registration_uniqueUsername;
-let registration_uniqueEmail;
-let registration_properUsername; 
 
 //function for delete old error messages - updating view in form 
-let registration_deleteOldErrorMessage = () => {
+const registration_deleteOldErrorMessage = () => {
   const errorMessages = document.querySelectorAll(".error-message");
   console.log(`error messages found`);
   if (errorMessages.length > 0) {
@@ -66,20 +57,22 @@ const isUsernameUnique = (username, users_storage) => {
   return true;
 };
 
-const errorInputDisplay = (str,elementWrapper )=> { 
+const registration_errorInputDisplay = (str,elementWrapper )=> { 
   const message = document.createElement("p");
   message.innerHTML = str;
   message.classList.add("error-message");
   elementWrapper.insertAdjacentElement('afterend', message);
 };
 
-const registrationHandle = (e) => {
+const handleRegistration = async (e) => {
   e.preventDefault();
   registration_deleteOldErrorMessage();
-  ////////////////////////////////
-  const storageUsers = sessionStorage.getItem("users");
-  if (storageUsers) {
-    registration_users = JSON.parse(storageUsers);
+
+  const registration_storageUsers = sessionStorage.getItem("users");
+
+  let registration_users;
+  if (registration_storageUsers) {
+    registration_users = JSON.parse(registration_storageUsers);
   } else {
     registration_users = [];
   };
@@ -92,26 +85,21 @@ const registrationHandle = (e) => {
   };
 
   //validation
-  registration_properEmail = checkEmailAndAliases(newUser.email);
-  registration_uniqueEmail = isEmailUnique(newUser.email,registration_users)
-  registration_confirmedEmail = registration_confirmEmailInput.value === newUser.email;
-  registration_properUsername = checkUsername(newUser.username)
-  registration_uniqueUsername = isUsernameUnique(newUser.username, registration_users) 
-  registration_properPassword = newUser.password.length > 5;
-
-//check in console log if registraction passed
-  console.log(`uniqueEmail ${registration_uniqueEmail}`)
-  console.log(`uniqueUsername ${registration_uniqueUsername}`)
-  console.log(`properPassword ${registration_properPassword}`)
-  console.log(`emailConfirmed ${registration_confirmedEmail}`)
+  const registration_properEmail = checkEmailAndAliases(newUser.email);
+  const registration_uniqueEmail = isEmailUnique(newUser.email,registration_users);
+  const registration_confirmedEmail = registration_confirmEmailInput.value === newUser.email;
+  const registration_properUsername = checkUsername(newUser.username);
+  const registration_uniqueUsername = isUsernameUnique(newUser.username, registration_users) ;
+  const registration_properPassword = newUser.password.length > 5;
 
   const isEmailValid =  registration_properEmail && registration_uniqueEmail && registration_confirmedEmail; 
   const isUserNameValid = registration_properUsername  && registration_uniqueUsername;
 
-
-  const isFormValid = isEmailValid && isUserNameValid && registration_properPassword;
   //main validation
-  if (isFormValid) {
+  const isRegistrationFormValid = isEmailValid && isUserNameValid && registration_properPassword;
+
+  if (isRegistrationFormValid) {
+    newUser.password = await createHash(newUser.password);
     registration_users.push(newUser);
     const updatedUsersString = JSON.stringify(registration_users);
     sessionStorage.setItem("users", updatedUsersString);
@@ -122,12 +110,11 @@ const registrationHandle = (e) => {
     const innerText = `<h4>${newUser.username}</h4>`
     usernameDiv.insertAdjacentHTML("afterbegin", innerText)
     usernameDiv.classList.add("username-div");
-     //do not work 
     registration_logoutWrapper.insertAdjacentElement("beforeend", usernameDiv);
     window.location.hash = '#/transactions';
 
     // geting current user for proper navigation display after changing location
-    registration_loggedIn = sessionStorage.getItem("currentUser");
+    const registration_loggedIn = sessionStorage.getItem("currentUser");
 
     if (registration_loggedIn) {
       registration_logoutBtn.style.visibility = "visible";
@@ -135,32 +122,30 @@ const registrationHandle = (e) => {
       registration_toRegistrationBtn.style.visibility = "hidden";
     };
 
-    if (!registration_loggedIn) nav_logoutBtn.style.visibility = "hidden";
-
     //navigation buttons get to normal position
     registration_toLoginBtn.style.order = "0";
     registration_toRegistrationBtn.style.order = "0";
 
     console.log("registration correct")
-   
+    //displaying proper error messages
   } else {
     if (!registration_properEmail) {
-      errorInputDisplay("Email musi mieć poprawny format", registration_emailInputWrapper);
+      login_errorInputDisplay("Email musi mieć poprawny format", registration_emailInputWrapper);
 
     } if (!registration_uniqueEmail) {
-      errorInputDisplay("Zajęty email. Użyj innego email", registration_emailInputWrapper);
+      login_errorInputDisplay("Zajęty email. Użyj innego email", registration_emailInputWrapper);
 
     } if (!registration_confirmedEmail) {
-      errorInputDisplay(`Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email"`, registration_confirmEmailInputWrapper);
+      login_errorInputDisplay(`Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email"`, registration_confirmEmailInputWrapper);
       
     } if (!registration_uniqueUsername) {
-      errorInputDisplay("Nazwa użytkownika musi być unikalna.", registration_usernameInputWrapper);
+      login_errorInputDisplay("Nazwa użytkownika musi być unikalna.", registration_usernameInputWrapper);
 
     } if (!registration_properUsername) {
-      errorInputDisplay("Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę", registration_usernameInputWrapper);
+      login_errorInputDisplay("Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę", registration_usernameInputWrapper);
     
     } if (!registration_properPassword) {
-      errorInputDisplay("Hasło musi składać się conajmniej z 6 znaków.", registration_passwordInputWrapper);
+      login_errorInputDisplay("Hasło musi składać się conajmniej z 6 znaków.", registration_passwordInputWrapper);
     }
   }
 };
@@ -180,8 +165,7 @@ const beforeRegistrationRender = async () => {
     registration_toRegistrationBtn.style.order = "1";
     registration_toLoginBtn.style.order = "-1";
   }
-
-}
+};
 
 Object.prototype.patronage.setGlobalKey('page_before_registration_render', beforeRegistrationRender);
 
@@ -237,7 +221,7 @@ const initRegistration = () => {
   registration_registrationBtn = document.querySelector(".registration-button");
 
   //onclick
-  registration_registrationBtn.onclick = registrationHandle;
+  registration_registrationBtn.onclick = handleRegistration;
 };
 
 Object.prototype.patronage.setGlobalKey('page_registration_init', initRegistration);

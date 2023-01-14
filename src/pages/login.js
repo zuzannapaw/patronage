@@ -1,5 +1,5 @@
-
 const storeInLogin = Object.prototype.patronage.getGlobalKey('store');
+const login_createHash = Object.prototype.patronage.getGlobalKey('createHash');
 
 let login_emailInput;
 let login_passwordInput;
@@ -9,53 +9,54 @@ let login_toLoginBtn;
 let login_logoutBtn;
 let login_loginBtn;
 
-let login_loggedIn;
-let currentUser;
-
 let login_logoutWrapper;
 let login_emailInputWrapper;
 let login_passwordInputWrapper;
 
-let correctPassword;
-
-
 //function for delete old error messages - updating view in form 
-let deleteOldErrorMessage = () => {
+const login_deleteOldErrorMessage = () => {
     const errorMessages = document.querySelectorAll(".error-message");
-  
-    console.log(`error messages found`);
-  
     if (errorMessages.length > 0) {
       errorMessages.forEach(err => err.parentNode.removeChild(err));
     };
 };
 
+const login_errorInputDisplay = (str,elementWrapper )=> { 
+    const message = document.createElement("p");
+    message.innerHTML = str;
+    message.classList.add("error-message");
+    elementWrapper.insertAdjacentElement('afterend', message);
+};
 
-//in future maybe helper function for login and registration?
-
-const loginUser = (e) => {
+const handleLogin = async (e) => {
     e.preventDefault();
-    deleteOldErrorMessage();
+    login_deleteOldErrorMessage();
 
-    const storageUsers = sessionStorage.getItem("users");
-    const users = JSON.parse(storageUsers);
+    const login_storageUsers = sessionStorage.getItem("users");
+    const login_users = JSON.parse(login_storageUsers);
 
-    //looking for current user
-    if(users){
-    currentUser = users.find(user => user.email === login_emailInput.value || user.username === login_emailInput.value)
-    console.log(`Current user: ${currentUser}`);
+    //looking for current user - if users already exist, find current user and check if password in form is correct. 
+    //if users do not exist yet, there is no current user and the password is not correct. 
+    let correctPassword;
+    let currentUser;
 
-    if (currentUser) {
-        correctPassword = login_passwordInput.value === currentUser.password;
-    }else{
+    if(login_users){
+        currentUser = login_users.find(user => user.email === login_emailInput.value || user.username === login_emailInput.value)
+
+        if (currentUser) {
+            const hashInputPassword = await login_createHash(login_passwordInput.value);
+            correctPassword = hashInputPassword === currentUser.password;
+        } else {
+            correctPassword = false;
+        }
+    } else {
+        currentUser = false;
         correctPassword = false;
     }
-}else{
-    currentUser = false;
-    correctPassword = false;
-}
 
-    if (currentUser && correctPassword) {
+    const isLoginFormValid = currentUser && correctPassword;
+
+    if (isLoginFormValid) {
         console.log("login correct");
         const currentUserString = JSON.stringify(currentUser);
         sessionStorage.setItem("currentUser", currentUserString);
@@ -68,39 +69,28 @@ const loginUser = (e) => {
         window.location.hash = '#/transactions';
 
         //checking for proper navigation display after changing location
-        login_loggedIn = sessionStorage.getItem("currentUser");
-
+        const login_loggedIn = sessionStorage.getItem("currentUser");
         if (login_loggedIn) {
             login_logoutBtn.style.visibility = "visible";
             login_toLoginBtn.style.visibility = "hidden";
             login_toRegistrationBtn.style.visibility = "hidden";
-        };
-
-        if (!login_loggedIn) login_logoutBtn.style.visibility = "hidden";
+        }
 
         //navigation buttons get to normal position
         login_toLoginBtn.style.order = "0";
         login_toRegistrationBtn.style.order = "0";
 
-    } else if (!currentUser || !correctPassword) {
+    //displaying proper error messages
+    } else {
         if (!currentUser) {
-            const message = document.createElement("p");
-            message.innerHTML = "Użytkownik nie istnieje. Zarejestruj się! ";
-            message.classList.add("error-message");
-            login_emailInputWrapper.insertAdjacentElement('afterend', message);
-
+            login_errorInputDisplay("Użytkownik nie istnieje. Zarejestruj się!",login_emailInputWrapper)
         } if (!correctPassword) {
-            const message = document.createElement("p");
-            message.innerHTML = "Błędne hasło";
-            message.classList.add("error-message");
-            login_passwordInputWrapper.insertAdjacentElement("afterend", message)
-        };
+            login_errorInputDisplay("Błędne hasło", login_passwordInputWrapper)
+        }
+    }
+};
 
-    };
-    //should i do "if" only for possible situation or not to be sure?
-}
-
-//this in beforeLoginRender?
+//in beforeLoginRender because i wanted navigation to change first, before login page render 
 const beforeLoginRender = async () => {
     console.log('Before render login');
 
@@ -135,23 +125,23 @@ const renderLogin = () => `
             </li>
         </ul>
 </div>
-`;
-Object.prototype.patronage.setGlobalKey('page_login_render', renderLogin);
+`
+;
 
+Object.prototype.patronage.setGlobalKey('page_login_render', renderLogin);
 
 const initLogin = () => {
     console.log('Login init');
-
+    //defining all necessary elments that will be used later (f.ex. in handleLogin function)
     login_emailInputWrapper = document.getElementById("login-email-li");
     login_passwordInputWrapper = document.getElementById("login-password-li");
     login_logoutWrapper = document.querySelector(".logout-wrapper");
     login_logoutBtn = document.querySelector(".logout-btn");
     login_loginBtn = document.getElementById('login-btn');
-    //for validation
     login_emailInput = document.getElementById("email");
     login_passwordInput = document.getElementById('password');
-
-    login_loginBtn.onclick = loginUser;
+    //assing onclick function of login button
+    login_loginBtn.onclick = handleLogin;
 };
 
 Object.prototype.patronage.setGlobalKey('page_login_init', initLogin);
@@ -159,7 +149,7 @@ Object.prototype.patronage.setGlobalKey('page_login_init', initLogin);
 const cleanupLogin = () => {
     console.log('cleanupLogin');
     login_loginBtn = document.getElementById('login-btn');
-    login_loginBtn.removeEventListener('click', loginUser);
+    login_loginBtn.removeEventListener('click', handleLogin);
 };
 
 Object.prototype.patronage.setGlobalKey('page_login_cleanup', cleanupLogin);

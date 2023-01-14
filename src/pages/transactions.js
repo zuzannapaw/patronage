@@ -21,17 +21,55 @@ let transactions_charts_wrapper_wrapper;
 let oneRowClicked = false;
 let allOthersRows = [];
 
-const handleSwipe = (e) =>{
-    e.preventDefault()
+// https://gist.github.com/SleepWalker/da5636b1abcbaff48c4d
+let touchstartX = 0;
+let touchendX = 0;
+
+const handleSwipe = () =>{
+    console.log("handle swipe works")
     const doughnutChart = document.querySelector(".doughnut-chart");
     const barChart = document.querySelector(".bar-chart");
 
-    if(barChart.style.display === "flex"){
-        barChart.style.display ="none";
+    // https://stackoverflow.com/questions/39679753/javascript-document-getelementbyidel-style-display-returns-empty-string-but
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle
+    const barChartStyles = window.getComputedStyle(barChart);
+    const barChartDisplay = barChartStyles.getPropertyValue('display')
+
+    if(barChartDisplay === "flex"){
+        console.log("im bar chart im flex")
+        barChart.style.display = "none"
         doughnutChart.style.display = "flex"
+      
     }else{
-        barChart.style.display = "flex";
+        console.log("im bar chart im none")
+        barChart.style.display = "flex"
         doughnutChart.style.display = "none"
+    
+    }
+};
+
+const handleGesture = () => {
+    if (touchendX < touchstartX) {
+        console.log('Swiped left');
+        handleSwipe();
+    }
+    
+    if (touchendX > touchstartX) {
+        console.log('Swiped right');
+        handleSwipe();
+    }
+};
+
+const handleOnTouchStart = (e) => {
+    if(screen.width < 769){
+        touchstartX = e.changedTouches[0].screenX;
+    }
+};
+
+const handleOnTouchEnd = (e) => {
+    if(screen.width < 769){
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture();
     }
 };
 
@@ -133,7 +171,6 @@ const getTransactionWithDetails = (transaction, transactionType, icon) => {
 
 const getTransaction = (transaction) => {
     const transactionTypesArray = Object.entries(transactions_transactionTypes);
-    console.log(transactionTypesArray )
     const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
     const icon = getIcon(transactionType);
     const id = makeId(5);
@@ -197,8 +234,8 @@ const initTransactions = () => {
     transactions_logoutBtn = document.querySelector(".logout-btn");
     transactions_transactionRows = document.querySelectorAll(".transaction-mobile-row");
     transactions_charts_wrapper_wrapper = document.querySelector(".charts-wrapper-wrapper");
-    //charts
 
+    //charts
     //doughnut chart
     const ctx = document.getElementById('myChart');
 
@@ -389,7 +426,8 @@ const initTransactions = () => {
     };
 
     //for mobile view, assing handleSwipe function
-    transactions_charts_wrapper_wrapper.ontouchend = handleSwipe;
+    transactions_charts_wrapper_wrapper.ontouchstart = handleOnTouchStart;
+    transactions_charts_wrapper_wrapper.ontouchend = handleOnTouchEnd;
 
     transactions_logoutBtn.onclick = logoutUser;
 };
