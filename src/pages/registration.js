@@ -169,29 +169,29 @@ const renderRegistration = () => {
 console.log('Registration render');
 
 return(`
-<div class="form-wrapper-registration">
+<form  class="form-wrapper-registration">
         <ul class="wrapper-registration">
             <li class="form-row-registration" id="email-li">
                 <label for="email">Email</label>
-                <input id="email">
+                <input id="email" tabindex="0">
               </li>
           <li class="form-row-registration" id="confirm-email-li">
             <label>Potwierdź email</label>
-            <input class="registration-email" id="confirm-email">
+            <input class="registration-email" tabindex="0" id="confirm-email">
           </li>
           <li class="form-row-registration" id="username-li">
           <label>Nazwa użytkownika</label>
-          <input class="registration-username" type="text" id="username">
+          <input class="registration-username" tabindex="0" type="text" id="username">
         </li>
           <li class="form-row-registration" id="password-li">
             <label for="password">Hasło</label>
-            <input type="password" id="password">
+            <input type="password" tabindex="0" id="password">
           </li>
           <li class="form-row-registration">
-            <button class="registration-button">Zarejestruj</a>
+            <button class="registration-button" type="submit" tabindex="0">Zarejestruj</a>
           </li>
         </ul>
-    </div>
+    </form >
 `)};
 
 Object.prototype.patronage.setGlobalKey('page_registration_render', renderRegistration);

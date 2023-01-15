@@ -104,21 +104,21 @@ const beforeLoginRender = async () => {
 Object.prototype.patronage.setGlobalKey('page_render_login', beforeLoginRender);
 
 const renderLogin = () => `
-<div class="form-wrapper-login">
-        <ul class="wrapper-login">
-            <li class="form-row-login" id="login-email-li">
-                <label>Nazwa użytkownika/Email</label>
-                <input id="email">
-            </li>
-            <li class="form-row-login" id="login-password-li">
-                <label for="password">Hasło</label>
-                <input type="password" id="password">
-            </li>
-            <li class="form-row-login">
-                <button id="login-btn" class="login">Zaloguj</button>
-            </li>
-        </ul>
-</div>
+<form class="form-wrapper-login">
+    <ul class="wrapper-login">
+        <li class="form-row-login" id="login-email-li">
+            <label>Nazwa użytkownika/Email</label>
+            <input id="email" tabindex="0">
+        </li>
+        <li class="form-row-login" id="login-password-li">
+            <label for="password">Hasło</label>
+            <input type="password" id="password" tabindex="0">
+        </li>
+        <li class="form-row-login">
+            <button id="login-btn" class="login" type="submit" tabindex="0">Zaloguj</button>
+        </li>
+    </ul>
+</form>
 `
 ;
 
