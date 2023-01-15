@@ -29,7 +29,6 @@ let touchstartX = 0;
 let touchendX = 0;
 
 const handleSwipe = () =>{
-    console.log("handle swipe works")
     const doughnutChart = document.querySelector(".doughnut-chart");
     const barChart = document.querySelector(".bar-chart");
 
@@ -39,11 +38,9 @@ const handleSwipe = () =>{
     const barChartDisplay = barChartStyles.getPropertyValue('display')
 
     if(barChartDisplay === "flex"){
-        console.log("im bar chart im flex")
         barChart.style.display = "none"
         doughnutChart.style.display = "flex"
     }else{
-        console.log("im bar chart im none")
         barChart.style.display = "flex"
         doughnutChart.style.display = "none"
     
@@ -54,12 +51,10 @@ const handleSwipe = () =>{
 //Helper functions for swipe event
 const handleGesture = () => {
     if (touchendX < touchstartX) {
-        console.log('Swiped left');
         handleSwipe();
     }
     
     if (touchendX > touchstartX) {
-        console.log('Swiped right');
         handleSwipe();
     }
 };
@@ -284,7 +279,6 @@ const getSearchInput = () =>{
 //4. else - if input value is NOT empty and selected type is diffrent from 0, return filtered transactions by search input AND selected value from select
 
 const handleSearch = () => {
-    console.log('handleSearch');
     const searchInputValue = transactions_inputSearch.value.toLowerCase();
     const selectedTypeValue = parseInt(transactions_select.value, 10);
     const allTransactions = transactions_transactions;

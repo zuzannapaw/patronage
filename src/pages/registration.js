@@ -27,7 +27,6 @@ let registration_passwordInputWrapper;
 //function for delete old error messages - updating view in form 
 const registration_deleteOldErrorMessage = () => {
   const errorMessages = document.querySelectorAll(".error-message");
-  console.log(`error messages found`);
   if (errorMessages.length > 0) {
     errorMessages.forEach(err => err.parentNode.removeChild(err));
   };
