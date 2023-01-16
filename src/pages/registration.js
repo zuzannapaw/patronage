@@ -155,20 +155,16 @@ const handleRegistration = async (e) => {
 
 const beforeRegistrationRender = async () => {
   console.log('Before render registration');
-//changing isInLoginPage property in store object to create a condition for navigation display
-  registrationStore.isInLoginPage = false;
   registration_navBar = document.getElementById("main-nav");
   registration_toRegistrationBtn = document.querySelector(".to-registration-page");
   registration_toLoginBtn = document.querySelector(".to-login-page");
 
   //to keep proper display of navigation - only toLoginBtn is visible. Changing order to switch positions of...
   //toLoginBtn and toRegistrationBtn - visible button must be aligned to left of navigation 
-  if (!registrationStore.isInLoginPage) {
-    registration_toLoginBtn.style.visibility = "visible";
-    registration_toRegistrationBtn.style.visibility = "hidden";
-    registration_toRegistrationBtn.style.order = "1";
-    registration_toLoginBtn.style.order = "-1";
-  }
+  registration_toLoginBtn.style.visibility = "visible";
+  registration_toRegistrationBtn.style.visibility = "hidden";
+  registration_toRegistrationBtn.style.order = "1";
+  registration_toLoginBtn.style.order = "-1";
 };
 
 Object.prototype.patronage.setGlobalKey('page_before_registration_render', beforeRegistrationRender);

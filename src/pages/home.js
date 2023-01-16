@@ -23,10 +23,12 @@ const renderHome  = () => {
     <div class="start-decoration">
         <div class ="text-decoration">
             <h1 class="text">Kontrol Bank</h1>
-            <h2 class="text">Miej kontrolę nad swoimi wydatkami.</h2>
-            <h2 class="text">Planuj lepiej z nami.</h2>
+            <div class="h2-wrapper">
+                <h2 class="text">Miej kontrolę nad swoimi wydatkami.</h2>
+                <h2 class="text">Planuj lepiej z nami.</h2>
+            </div>
         </div>
-        <img src="./images/money.jpg" alt="Pieniądze">
+        <img src="./src/images/money.jpg" alt="Pieniądze">
     <div>
     `);
 };
