@@ -21,8 +21,6 @@ let transactions_transactionsList;
 let transactions_inputSearch;
 let transactions_select;
 
-let oneRowClicked = false;
-let allOthersRows = [];
 
 // https://gist.github.com/SleepWalker/da5636b1abcbaff48c4d
 let touchstartX = 0;
