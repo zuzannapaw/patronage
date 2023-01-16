@@ -1,11 +1,10 @@
+
 .form-wrapper-registration {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+   
 }
 
 .wrapper-registration {
-    background-color: whitesmoke;
+    background-color: rgba(245, 245, 245,0.6);
     list-style-type: none;
     padding: 3%;
     border-radius: 3px;
@@ -19,18 +18,19 @@
     margin:3%;
 }
 
-.form-row-registration >label {
+.form-row-registration>label {
     font-size: 0.9em;
     padding: .5em 1em .5em 0;
     flex: 1;
 }
 
-.form-row-registration >input {
-    flex: 2;
+.form-row-registration>input {
+    flex:2;
+    border: 1px solid #23395d;
 }
 
-.form-row-registration >input,
-.form-row-registration >button {
+.form-row-registration>input,
+.form-row-registration>button {
     padding: .5em;
 }
 
@@ -56,6 +56,6 @@
     font-size: 11px;
     margin-left: 36%;
     margin-right: 3%;
-    max-height: 15%;
 }
+
 

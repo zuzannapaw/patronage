@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="styles/navigation.css" />
-    <link rel="stylesheet" href="styles/login.css" />
-    <link rel="stylesheet" href="styles/registration.css" />
-    <link rel="stylesheet" href="styles/registration.css" />
-    <link rel="stylesheet" href="styles/transactions.css" /> -->
-    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="./styles/main.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Patronage</title>
 </head>
@@ -22,9 +18,17 @@
     </div>
     <!-- cdn chart -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.1.1/chart.umd.js"></script>
-    <script type="module" src="./js/router.js"></script>
-    <script type="module" src="./js/nav.js"> </script>
-    <script type="module" src="./js/global.js"> </script>
+    <script type="text/javascript" src="./src/services/global/global-service.js"> </script>
+    <script type="text/javascript" src="./src/services/store/store.js"> </script>
+    <script type="text/javascript" src="./src/services/api/api-service.js"> </script>
+    <script type="text/javascript" src="./src/pages/nav.js"></script>
+    <script type="text/javascript" src="./src/pages/404.js"></script>
+    <script type="text/javascript" src="./src/pages/unauthorized.js"></script>
+    <script type="text/javascript" src="./src/pages/home.js"></script>
+    <script type="text/javascript" src="./src/pages/login.js"></script>
+    <script type="text/javascript" src="./src/pages/registration.js"></script>
+    <script type="text/javascript" src="./src/pages/transactions.js"></script>
+    <script type="text/javascript" src="./src/services/routing/router.js"></script>
 </body>
 
 </html>

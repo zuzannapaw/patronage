@@ -1,4 +1,5 @@
 @import url("./desktop-styles/index-desktop.css");
+@import url("./desktop-styles/home.css");
 @import url("./desktop-styles/navigation.css");
 @import url("./desktop-styles/registration.css");
 @import url("./desktop-styles/login.css");

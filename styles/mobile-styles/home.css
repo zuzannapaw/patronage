@@ -1,0 +1,41 @@
+.start-decoration{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width:65%;
+    height:65%;
+    min-width: 300px;
+    min-height: 500px;
+    max-height: 620px;
+    background-color: rgba(245, 245, 245,0.3);
+    box-shadow: 6px 6px 13px rgba(35,57,93,0.2);
+    padding:5%;
+}
+
+.text{
+    width:100%;
+    color:#23395d;
+    text-align: center;
+    font-family: Open Sans, sans-serif;
+    font-weight: 500;
+    margin:1%;
+}
+
+h1.text{
+    font-size:2rem;
+    margin-bottom:3%;
+}
+
+h2.text{
+    font-size:1.2rem;
+    text-align: center;
+}
+
+img{
+    height:50%;
+    width:20%;
+    min-width:200px;
+    max-width:250px;
+    max-height:250px;
+}

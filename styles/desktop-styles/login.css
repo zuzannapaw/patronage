@@ -1,13 +1,16 @@
 
+* { 
+    margin: 0;
+    padding: 0;
+    font-family: Open Sans, sans-serif;
+}
+
 .form-wrapper-login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 92vh;
+   
 }
 
 .wrapper-login {
-    background-color: whitesmoke;
+    background-color: rgba(245, 245, 245,0.6);
     list-style-type: none;
     padding: 3%;
     border-radius: 3px;
@@ -36,6 +39,7 @@
 
 .form-row-login>input {
     flex: 2;
+    border: 1px solid #23395d;
 }
 
 .form-row-login>input,
