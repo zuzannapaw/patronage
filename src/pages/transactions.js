@@ -292,6 +292,37 @@ const getSearchInput = () =>{
     `)
 };
 
+const addAccordinOnClicks = () => {
+        //for mobile view, expanding transaction's row 
+    //i click on visible row and for all visible rowns i assign onclick with toggle. This refers to that current element in html. 
+    //let box is nextSibling element - transactions-details-mobile - that one that should expand by cliking on choosen visible view. 
+    //if sibling element has maxHeight, make sibling element invisible. if sibling doeasnt have max height (even 0) make it visible
+    //and for all visible rows - if other elements are not the same as the clicked one (this) - they will become invisible. 
+    //I can open only one row ,when i open another one, previous one hides. 
+    //https://codepen.io/ProgramingTillNow/pen/XWZZgoZ
+    
+    const titles = document.querySelectorAll('.title');
+    for(i = 0; i < titles.length; i++){
+        titles[i].onclick = function(){
+            this.classList.toggle('active');
+            let box = this.nextElementSibling;
+
+            if(box.style.maxHeight){
+                box.style.maxHeight = null;
+            } else {
+                box.style.maxHeight = box.scrollHeight + 500 +'px'
+            };
+
+            for(j = 0; j < titles.length; j++){
+                if(titles[j] !== this ){
+                    titles[j].classList.remove('active');
+                    titles[j].nextElementSibling.style.maxHeight = null;
+                };
+            };
+        };
+    };
+}
+
 //1.if input value is empty and selected type from select is 0, return all transactions
 //2. if input value is NOT empty and selected type from select is 0, return transactions filtered by search input
 //3. if input value is empty and selected value is diffrent from 0, return transactions filtered by selected value from select
@@ -313,7 +344,8 @@ const handleSearch = () => {
     } else {
         const filteredTransactions = allTransactions.filter(transaction => transaction.type === selectedTypeValue && transaction.description.toLowerCase().includes(searchInputValue));
         transactions_transactionsList.innerHTML = getTransactionsWithLabels(filteredTransactions);
-    }  
+    }
+    addAccordinOnClicks();
 };
 
 const renderTransactions = () => {
@@ -524,36 +556,7 @@ const initTransactions = () => {
         },
     });
 
-    //for mobile view, expanding transaction's row 
-    //i click on visible row and for all visible rowns i assign onclick with toggle. This refers to that current element in html. 
-    //let box is nextSibling element - transactions-details-mobile - that one that should expand by cliking on choosen visible view. 
-    //if sibling element has maxHeight, make sibling element invisible. if sibling doeasnt have max height (even 0) make it visible
-    //and for all visible rows - if other elements are not the same as the clicked one (this) - they will become invisible. 
-    //I can open only one row ,when i open another one, previous one hides. 
-    //https://codepen.io/ProgramingTillNow/pen/XWZZgoZ
-    
-    let titles = document.querySelectorAll('.title');
-    for(i = 0; i < titles.length; i++){
-        titles[i].onclick = function(){
-            this.classList.toggle('active');
-            let box = this.nextElementSibling;
-            console.log(box)
-
-            if(box.style.maxHeight){
-                box.style.maxHeight = null;
-            } else {
-                box.style.maxHeight = box.scrollHeight + 500 +'px'
-            };
-
-            for(j = 0; j < titles.length; j++){
-                if(titles[j] !== this ){
-                    titles[j].classList.remove('active');
-                    titles[j].nextElementSibling.style.maxHeight = null;
-                };
-            };
-        };
-    };
-
+    addAccordinOnClicks();
     //for mobile view, assing handleSwipe function
     transactions_charts_wrapper_wrapper.ontouchstart = handleOnTouchStart;
     transactions_charts_wrapper_wrapper.ontouchend = handleOnTouchEnd;
