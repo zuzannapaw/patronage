@@ -27,7 +27,12 @@ let allOthersRows = [];
 // https://gist.github.com/SleepWalker/da5636b1abcbaff48c4d
 let touchstartX = 0;
 let touchendX = 0;
-
+//function for handling swipe - for mobile device 
+//getComputedStyle- style will return empty string
+//first rendered styles are default, then computed (from file.css)
+//and then inline from js code. Elemnt.style. will work on inline styles. 
+//computed styles can be overriden by inline styles. 
+//Inline styles are the highest in the hierarchy of styles (exept if you use !important in file.css) 
 const handleSwipe = () =>{
     const doughnutChart = document.querySelector(".doughnut-chart");
     const barChart = document.querySelector(".bar-chart");
@@ -47,8 +52,8 @@ const handleSwipe = () =>{
     }
 };
 
-
 //Helper functions for swipe event
+//handleGesture - is called in handleOnTouchedEnd.
 const handleGesture = () => {
     if (touchendX < touchstartX) {
         handleSwipe();
@@ -64,7 +69,8 @@ const handleOnTouchStart = (e) => {
         touchstartX = e.changedTouches[0].screenX;
     }
 };
-
+//To create swipe gesture this function needs to be called when user has done swipe.
+//Not when he touch the screen for the first time, but when he touch, swipe and let go the finger
 const handleOnTouchEnd = (e) => {
     if(screen.width < 769){
         touchendX = e.changedTouches[0].screenX;
@@ -72,16 +78,26 @@ const handleOnTouchEnd = (e) => {
     }
 };
 
-//function that returns grouped transactions by date and transfer is to array of entries - for chart data and render transactions when searching 
+
+//https://dmitripavlutin.com/javascript-array-group/
+//Function that returns grouped transactions by date and transfer is to array of entries -
+//- for bar chart data (for balance) and render transactions initially and when searching.
 const getGroupedByDate = (transactions) => {
       //this will always be dynamic bcs it depends of transactions_transactions.map
-      const groupByDate = transactions.reduce((group, product) => {
-        const { date } = product;
+      //group is empty object from start
+      //reduce - i take single transaction and destructurize it - i take property date from it.
+      //if object group has already property === date ,ovveride it with previous value if date was before
+      //or create empty array if date is new
+      //push transaction to created empty array or add to existing array. return object for next iteration
+      //or when you done - return complete groupByDate object 
+    const groupByDate = transactions.reduce((group, transaction) => {
+        const { date } = transaction;
         group[date] = group[date] ?? [];
-        group[date].push(product);
+        group[date].push(transaction);
         return group;
     }, {});
 
+    //Create groupByDateEntries array and return it [[dateX, [transactionA, transactionB...], dateY,[transactionM, transactionN...], ...]]
     const groupByDateEntries = Object.entries(groupByDate);
 
     return groupByDateEntries;
@@ -90,6 +106,9 @@ const getGroupedByDate = (transactions) => {
 const logoutUser = (e) => {
     e.preventDefault();
     console.log("logout correct");
+
+    //removing current user from session storage and getting it again after that for proper navigation display. 
+    //logoutBtn is not visible, toLoginBtn and toRegistrationBtn are visible and their order is the same- they return on places
     sessionStorage.removeItem("currentUser");
     transactions_loggedIn = sessionStorage.getItem("currentUser");
 
@@ -102,8 +121,8 @@ const logoutUser = (e) => {
         transactions_toLoginBtn.style.order = "0";
     };
 
+    //removing username from navigation and changing location to "/" - "home"
     const transactions_usernameDiv = document.querySelector(".username-div");
-
     transactions_logoutWrapper.removeChild(transactions_usernameDiv);
 
     window.location.hash = '/';
@@ -113,8 +132,9 @@ const beforeTransactionsRender = async () => {
     console.log('Before render transactions');
     transactions_response = await transactionsGetData('https://api.npoint.io/38edf0c5f3eb9ac768bd', {});
 
+    //checking if there is current user in session storage:
+    //when user reloads the page it has to display username in navigation.
     const isCurrentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-
     if(isCurrentUser){
         const  transactions_logoutWrapper = document.querySelector(".logout-wrapper");
         const usernameDiv = document.createElement("div");
@@ -125,28 +145,21 @@ const beforeTransactionsRender = async () => {
     }
 
     //mistake in object's name in database, typo in name - "transacationTypes"
+    //! assing response from api to variables
     transactions_transactions = transactions_response.transactions;
     transactions_transactionTypes = transactions_response.transacationTypes;
     transactionsStore.transactions = transactions_response.transactions;
-    const result = { transactions_transactions: transactions_response.transactions };
 
+    //in case if that function would return anything 
+    const result = { transactions_transactions: transactions_response.transactions };
     return result;
 };
 
 Object.prototype.patronage.setGlobalKey('page_before_transactions_render', beforeTransactionsRender);
 
-// helper function that returns an id for transactions row
-const makeId = (length) => {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-};
 
-
+//Getting proper icon for transaction - take transactionType and if it it's name is correct return proper icon. 
+//if name cannot be compare - return default icon with question mark (no type).
 const getIcon = (transactionType) => {
     switch (transactionType) {
         case "Wpływy - inne":
@@ -162,7 +175,9 @@ const getIcon = (transactionType) => {
     };
 };
 
-//get transaction's row with details for expanded row in mobile view
+//get transaction's row with details for expanded row in mobile view.
+//use the arguments passed in getTransaction. 
+
 const getTransactionWithDetails = (transaction, transactionType, icon) => {
     return (`
         <div class="transaction-details-mobile box">
@@ -197,11 +212,11 @@ const getTransactionWithDetails = (transaction, transactionType, icon) => {
 const getTransaction = (transaction) => {
     const transactionTypesArray = Object.entries(transactions_transactionTypes);
     const transactionType = transactionTypesArray.find(keyType => keyType[0] == transaction.type)[1];
-    const icon = getIcon(transactionType);
-    const id = makeId(5);
 
+    //use currentTransactionType to create a current icon by getIcon function
+    const icon = getIcon(transactionType);
     return (`
-        <div class="transaction item" id=${id}>
+        <div class="transaction item">
             <div class ="visible-row title">
                 <div class="transaction-data" id="date_div">
                     <p class="transaction-text" id="date">${transaction.date}<p>
@@ -233,7 +248,7 @@ const getTransaction = (transaction) => {
 // and also when searching transactions by description or type in handleSearch
 //if passed transactions are undefinded or empty, return initial transactions 
 //if passed transactions exists (it means that it was called with filtered transactions in handleSearch)...
-//...return these filtered transactions and render them (it creates html with transaction data)   
+//...return these filtered transactions and render them (it creates html with transaction data).   
 const getTransactionsWithLabels = (transactions) => {
     let groupByDateEntries;
     if (typeof transactions === "undefined" || transactions.length === 0) {
@@ -241,13 +256,17 @@ const getTransactionsWithLabels = (transactions) => {
     } else {
         groupByDateEntries = getGroupedByDate(transactions);
     }
-    
+
     const transactionsWithLabels = groupByDateEntries.map(element => {
         const transactions = element[1].map(transaction => getTransaction(transaction)).join('');
         return `<div class="transaction-label"><p>${element[0]}</p></div>` + `${transactions}`;
     }).join('');
 
     return transactionsWithLabels;
+
+    //transactions will be ALWAYS rendered with date labels, but in desktop view im hiding it by ...
+    //giving class transaction-label display none. Easier for styling. Then labels will disappear and ...
+    //only transactions will be visible. 
 };
 
 //helper functions for handleSearch - creating select tag with proper option's names - option value is a number of type...
@@ -338,7 +357,7 @@ const initTransactions = () => {
     transactions_select = document.querySelector(".select");
 
     //charts
-    //doughnut chart
+    //doughnut chart - transactions types and amount of transactions in one type
     const ctx = document.getElementById('myChart');
 
     //creating chart's data
@@ -346,7 +365,7 @@ const initTransactions = () => {
     const transactions2 = [];
     const transactions3 = [];
     const transactions4 = [];
-
+    //how many transactions is in definite type  
     transactions_transactions.forEach(transaction => {
         if (transaction.type == 1) {
             transactions1.push(transaction)
@@ -362,14 +381,15 @@ const initTransactions = () => {
         }
     });
 
+    //checking length of each of array with transactions grouped by types
     const transactions1Length = transactions1.length;
     const transactions2Length = transactions2.length;
     const transactions3Length = transactions3.length;
     const transactions4Length = transactions4.length;
 
+    //values of transactionTypes - names of types.
     const transactionTypesValues = Object.values(transactions_transactionTypes);
 
-   
     //chart data
     const data = {
         labels: transactionTypesValues,
@@ -398,29 +418,35 @@ const initTransactions = () => {
     });
 
 
-    //bar chart
+    //bar chart - dates and balances
     const ctx2 = document.getElementById('myChart2');
 
-    //dates
+    // array wit dates
     const transactionsDates = transactions_transactions.map(transaction => {
         return transaction.date
     });
 
     //this will always be dynamic bcs it depends of transactions_transactions.map
+    //creating set to display dates (without repetitions) as labels of every balance
+    //changing set into array.
     const transactionsDatesSet = new Set(transactionsDates);
-    const transactionsDatesArray = Array.from(transactionsDatesSet)
+    const transactionsDatesArray = Array.from(transactionsDatesSet);
 
+    //this will return all transactions grouped by date
     const groupByDateEntries = getGroupedByDate(transactions_transactions);
 
     let amount;
     const initialValue = 0;
-
+    //amount is reduced value of transactions balances from one date.
+    //groupByDateEntries will return [Array(2),Array(2),Array(2)], where each of "child" array contains date as index 0 and child' child array with index 1
+    //index 1 is value when reducing. 
+    //For each of value reduce it's amounts. Balance array is array of sumes of values.     
     const balanceArray = groupByDateEntries.map(value => {
         amount = value[1].reduce((acc, transaction) => acc + transaction.amount, initialValue)
         return amount
     });
-
   
+    //Displaying proper color of bars, when balance of day > 0 - green, when < 0 - red
     const barsColorsArray = balanceArray.map(balance => {
         if (balance < 0) {
             return 'rgba(255, 99, 132, 0.2)'
@@ -499,12 +525,19 @@ const initTransactions = () => {
     });
 
     //for mobile view, expanding transaction's row 
-
+    //i click on visible row and for all visible rowns i assign onclick with toggle. This refers to that current element in html. 
+    //let box is nextSibling element - transactions-details-mobile - that one that should expand by cliking on choosen visible view. 
+    //if sibling element has maxHeight, make sibling element invisible. if sibling doeasnt have max height (even 0) make it visible
+    //and for all visible rows - if other elements are not the same as the clicked one (this) - they will become invisible. 
+    //I can open only one row ,when i open another one, previous one hides. 
+    //https://codepen.io/ProgramingTillNow/pen/XWZZgoZ
+    
     let titles = document.querySelectorAll('.title');
     for(i = 0; i < titles.length; i++){
         titles[i].onclick = function(){
             this.classList.toggle('active');
             let box = this.nextElementSibling;
+            console.log(box)
 
             if(box.style.maxHeight){
                 box.style.maxHeight = null;
@@ -525,6 +558,7 @@ const initTransactions = () => {
     transactions_charts_wrapper_wrapper.ontouchstart = handleOnTouchStart;
     transactions_charts_wrapper_wrapper.ontouchend = handleOnTouchEnd;
 
+    //assign handleSearch function for transaction's finder 
     transactions_inputSearch.onkeyup = handleSearch;
     transactions_select.onchange = handleSearch;
 

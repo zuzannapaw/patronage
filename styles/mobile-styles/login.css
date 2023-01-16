@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: whitesmoke;
+    background-color:rgba(245, 245, 245,0.6);
     list-style-type: none;
     border-radius: 3px;
     padding: 5px;
@@ -47,6 +47,7 @@
 
 .form-row-login>input {
     flex: 2;
+    border: 1px solid #23395d;
 }
 
 .form-row-login>input,

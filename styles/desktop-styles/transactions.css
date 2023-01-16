@@ -128,8 +128,11 @@
 .select{
     margin-left:1%;
     border:1px solid #23395d;
+    font-family: Open Sans, sans-serif;
 }
 
 .input-search{
     border: 1px solid #23395d;
+    padding-left:3px;
+    font-family: Open Sans, sans-serif;
 }

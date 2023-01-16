@@ -4,7 +4,7 @@
 }
 
 .wrapper-registration {
-    background-color: whitesmoke;
+    background-color: rgba(245, 245, 245,0.6);
     list-style-type: none;
     padding: 3%;
     border-radius: 3px;
@@ -26,6 +26,7 @@
 
 .form-row-registration>input {
     flex:2;
+    border: 1px solid #23395d;
 }
 
 .form-row-registration>input,
@@ -54,6 +55,7 @@
     color:red;
     font-size: 11px;
     margin-left: 36%;
+    margin-right: 3%;
 }
 
 

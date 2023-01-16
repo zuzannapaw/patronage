@@ -20,7 +20,14 @@ const renderHome  = () => {
     console.log('Home render');
 
     return (`
-        <h1>Dzień dobry!</h1>
+    <div class="start-decoration">
+        <div class ="text-decoration">
+            <h1 class="text">Kontrol Bank</h1>
+            <h2 class="text">Miej kontrolę nad swoimi wydatkami.</h2>
+            <h2 class="text">Planuj lepiej z nami.</h2>
+        </div>
+        <img src="./images/money.jpg" alt="Pieniądze">
+    <div>
     `);
 };
 Object.prototype.patronage.setGlobalKey('page_home_render', renderHome);

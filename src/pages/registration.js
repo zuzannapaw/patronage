@@ -32,6 +32,9 @@ const registration_deleteOldErrorMessage = () => {
   };
 };
 
+//helper functions for validation
+//checkEmailAndAliases - complete functionality does not work. This regex will check if email has proper format...
+//...and if adres@ is the same as adres+alias@
 const checkEmailAndAliases = (str) =>{
   return /^([A-Za-z0-9_\-.+])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,})$/.test(str);
 };
@@ -68,7 +71,8 @@ const handleRegistration = async (e) => {
   registration_deleteOldErrorMessage();
 
   const registration_storageUsers = sessionStorage.getItem("users");
-
+  //if registration_users exist, convert it into object. 
+  //if registration_users do not exist, assign empty array.
   let registration_users;
   if (registration_storageUsers) {
     registration_users = JSON.parse(registration_storageUsers);
@@ -83,7 +87,7 @@ const handleRegistration = async (e) => {
     password: registration_passwordInput.value,
   };
 
-  //validation
+  //validation - calling helper functions with newUser properties
   const registration_properEmail = checkEmailAndAliases(newUser.email);
   const registration_uniqueEmail = isEmailUnique(newUser.email,registration_users);
   const registration_confirmedEmail = registration_confirmEmailInput.value === newUser.email;
@@ -95,6 +99,11 @@ const handleRegistration = async (e) => {
   const isUserNameValid = registration_properUsername  && registration_uniqueUsername;
 
   //main validation
+  //check if all conditions are true.
+  //if isRegistrationFormValud is true: 1.convert new user's password into hash,
+  //2.push new user into array registration_users,
+  //3.convert it into string to set it into session storage
+  //4.change location to /transactions 
   const isRegistrationFormValid = isEmailValid && isUserNameValid && registration_properPassword;
 
   if (isRegistrationFormValid) {
@@ -117,43 +126,43 @@ const handleRegistration = async (e) => {
       registration_toRegistrationBtn.style.visibility = "hidden";
     };
 
-    //navigation buttons get to normal position
+    //navigation buttons get to normal position - helps displaying logoutBtn properly
     registration_toLoginBtn.style.order = "0";
     registration_toRegistrationBtn.style.order = "0";
 
     console.log("registration correct")
-    //displaying proper error messages
   } else {
     if (!registration_properEmail) {
-      login_errorInputDisplay("Email musi mieć poprawny format", registration_emailInputWrapper);
+      login_errorInputDisplay("Email musi mieć poprawny format.", registration_emailInputWrapper);
 
     } if (!registration_uniqueEmail) {
-      login_errorInputDisplay("Zajęty email. Użyj innego email", registration_emailInputWrapper);
+      login_errorInputDisplay("Zajęty email. Użyj innego email.", registration_emailInputWrapper);
 
     } if (!registration_confirmedEmail) {
-      login_errorInputDisplay(`Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email"`, registration_confirmEmailInputWrapper);
+      login_errorInputDisplay(`Pole "Potwierdź email musi mieć taką samą wartość jak pole "Email".`, registration_confirmEmailInputWrapper);
       
     } if (!registration_uniqueUsername) {
       login_errorInputDisplay("Nazwa użytkownika musi być unikalna.", registration_usernameInputWrapper);
 
     } if (!registration_properUsername) {
-      login_errorInputDisplay("Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę", registration_usernameInputWrapper);
+      login_errorInputDisplay("Nazwa użytkownika ma wynosić od 6 do 16 znaków, składać się tylko z liter, cyfr i znaków - _ [ ] \ / przy czym musi zawierać co najmniej 5 liter i jedną cyfrę.", registration_usernameInputWrapper);
     
     } if (!registration_properPassword) {
-      login_errorInputDisplay("Hasło musi składać się conajmniej z 6 znaków.", registration_passwordInputWrapper);
+      login_errorInputDisplay("Hasło musi składać się co najmniej z 6 znaków.", registration_passwordInputWrapper);
     }
   }
 };
 
 const beforeRegistrationRender = async () => {
   console.log('Before render registration');
-
+//changing isInLoginPage property in store object to create a condition for navigation display
   registrationStore.isInLoginPage = false;
   registration_navBar = document.getElementById("main-nav");
   registration_toRegistrationBtn = document.querySelector(".to-registration-page");
   registration_toLoginBtn = document.querySelector(".to-login-page");
 
-  //to keep proper display of navigation
+  //to keep proper display of navigation - only toLoginBtn is visible. Changing order to switch positions of...
+  //toLoginBtn and toRegistrationBtn - visible button must be aligned to left of navigation 
   if (!registrationStore.isInLoginPage) {
     registration_toLoginBtn.style.visibility = "visible";
     registration_toRegistrationBtn.style.visibility = "hidden";
@@ -215,7 +224,7 @@ const initRegistration = () => {
 
   registration_registrationBtn = document.querySelector(".registration-button");
 
-  //onclick
+  //assing handleRegistration function
   registration_registrationBtn.onclick = handleRegistration;
 };
 

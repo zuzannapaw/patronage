@@ -34,7 +34,8 @@ const handleLogin = async (e) => {
     const login_storageUsers = sessionStorage.getItem("users");
     const login_users = JSON.parse(login_storageUsers);
 
-    //looking for current user - if users already exist, find current user and check if password in form is correct. 
+    //looking for current user - if users already exist, find current user and check if password in form is correct...
+    //...by transform password from input into hash and compare it with hashed password of current user 
     //if users do not exist yet, there is no current user and the password is not correct. 
     let correctPassword;
     let currentUser;
@@ -53,6 +54,11 @@ const handleLogin = async (e) => {
         correctPassword = false;
     }
 
+    //main validation 
+    //if current user exists and password is correct: isLoginFormValid is true.
+    //if isLoginFormValid is true: 1. convert current user into string to set it into sessionStorage
+    //2.change location to transactions
+
     const isLoginFormValid = currentUser && correctPassword;
 
     if (isLoginFormValid) {
@@ -70,7 +76,7 @@ const handleLogin = async (e) => {
             login_toRegistrationBtn.style.visibility = "hidden";
         }
 
-        //navigation buttons get to normal position
+        //navigation buttons get to normal position - helps displaying logoutBtn properly
         login_toLoginBtn.style.order = "0";
         login_toRegistrationBtn.style.order = "0";
 
@@ -79,18 +85,23 @@ const handleLogin = async (e) => {
         if (!currentUser) {
             login_errorInputDisplay("Użytkownik nie istnieje. Zarejestruj się!",login_emailInputWrapper)
         } if (!correctPassword) {
-            login_errorInputDisplay("Błędne hasło", login_passwordInputWrapper)
+            login_errorInputDisplay("Błędne hasło.", login_passwordInputWrapper)
         }
     }
 };
 
-//in beforeLoginRender because i wanted navigation to change first, before login page render 
+// Changing toLogin and toRegistration buttons ...
+//...in beforeLoginRender because i wanted navigation to change first, before login page render 
 const beforeLoginRender = async () => {
     console.log('Before render login');
 
+    //changing isInLoginPage property in store object to create a condition for navigation display
     storeInLogin.isInLoginPage = true;
     Object.prototype.patronage.setGlobalKey('store',storeInLogin);
-   
+    //setting here, but not in registration, check!!
+
+   //to keep proper display of navigation - only toLoginBtn is visible. Changing order to switch positions of...
+  //toLoginBtn and toRegistrationBtn - visible button must be aligned to left of navigation 
     login_toRegistrationBtn = document.querySelector(".to-registration-page");
     login_toLoginBtn = document.querySelector(".to-login-page")
     if (storeInLogin.isInLoginPage) {

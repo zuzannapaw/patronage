@@ -5,6 +5,9 @@
     height: 40vh;
     width: 100vw;
     padding:4%;
+    min-height: 250px;
+    max-height: 250px;
+    margin-bottom: 40px;
 }
 
 .charts-wrapper {
