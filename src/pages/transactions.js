@@ -248,7 +248,7 @@ const getTransaction = (transaction) => {
 // and also when searching transactions by description or type in handleSearch
 //if passed transactions are undefinded or empty, return initial transactions 
 //if passed transactions exists (it means that it was called with filtered transactions in handleSearch)...
-//...return these filtered transactions and render them (it creates html with transaction data).   
+//...return these filtered transactions and render them (it creates html of transaction with transactions data label).   
 const getTransactionsWithLabels = (transactions) => {
     let groupByDateEntries;
     if (typeof transactions === "undefined" || transactions.length === 0) {
