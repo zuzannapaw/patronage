@@ -23,6 +23,7 @@ let transactions_select;
 
 let transactions_mobile_arrow_right;
 let transactions_mobile_arrow_left;
+let slideIndex = 1;
 
 // https://gist.github.com/SleepWalker/da5636b1abcbaff48c4d
 let touchstartX = 0;
@@ -352,21 +353,19 @@ const renderTransactions = () => {
     console.log('Transactions render');
 
     return (`
-        <div class = "charts-wrapper-wrapper">
-            <div class = "charts-wrapper">
-                <div class="carousel-arrow-icon-left">
-                    <i class="fa-solid fa-circle-arrow-left"></i>
-                </div>
-                <div class="doughnut-chart">
-                    <canvas id="myChart"></canvas>
-                </div>
-                <div class="bar-chart">
-                    <canvas id="myChart2"></canvas>
-                </div>
-                <div class="carousel-arrow-icon-right">
-                    <i class="fa-solid fa-circle-arrow-right"></i>
-                </div>
+        <div class="slideshow-container">
+            <!-- Full-width images with number and caption text -->
+            <div class="mySlides fade">
+                <canvas id="myChart"></canvas>
             </div>
+        
+            <div class="mySlides fade">
+                <canvas id="myChart2"></canvas>
+            </div>
+        
+            <!-- Next and previous buttons -->
+            <a class="prev">&#10094;</a>
+            <a class="next">&#10095;</a>
         </div>
         <div class = "search-wrapper">
             ${getSearchInput()}
@@ -564,12 +563,41 @@ const initTransactions = () => {
         },
     });
 
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex-1].style.display = "block";
+    }
+
+    const next = document.querySelector('.next');
+    const prev = document.querySelector('.prev');
+    prev.onclick = () => plusSlides(-1);
+    next.onclick = () => plusSlides(1);
+
     addAccordinOnClicks();
     //for mobile view, assing handleSwipe function
-    transactions_charts_wrapper_wrapper.ontouchstart = handleOnTouchStart;
-    transactions_charts_wrapper_wrapper.ontouchend = handleOnTouchEnd;
-    transactions_mobile_arrow_right.onclick = handleSwipe;
-    transactions_mobile_arrow_left.onclick = handleSwipe;
+    // transactions_charts_wrapper_wrapper.ontouchstart = handleOnTouchStart;
+    // transactions_charts_wrapper_wrapper.ontouchend = handleOnTouchEnd;
+    // transactions_mobile_arrow_right.onclick = handleSwipe;
+    // transactions_mobile_arrow_left.onclick = handleSwipe;
 
     //assign handleSearch function for transaction's finder 
     transactions_inputSearch.onkeyup = handleSearch;
