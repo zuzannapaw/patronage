@@ -21,6 +21,8 @@ let transactions_transactionsList;
 let transactions_inputSearch;
 let transactions_select;
 
+let transactions_mobile_arrow_right;
+let transactions_mobile_arrow_left;
 
 // https://gist.github.com/SleepWalker/da5636b1abcbaff48c4d
 let touchstartX = 0;
@@ -352,11 +354,17 @@ const renderTransactions = () => {
     return (`
         <div class = "charts-wrapper-wrapper">
             <div class = "charts-wrapper">
+                <div class="carousel-arrow-icon-left">
+                    <i class="fa-solid fa-circle-arrow-left"></i>
+                </div>
                 <div class="doughnut-chart">
                     <canvas id="myChart"></canvas>
                 </div>
                 <div class="bar-chart">
                     <canvas id="myChart2"></canvas>
+                </div>
+                <div class="carousel-arrow-icon-right">
+                    <i class="fa-solid fa-circle-arrow-right"></i>
                 </div>
             </div>
         </div>
@@ -385,6 +393,8 @@ const initTransactions = () => {
     transactions_transactionsList = document.querySelector(".transactions-list");
     transactions_inputSearch = document.querySelector(".input-search");
     transactions_select = document.querySelector(".select");
+    transactions_mobile_arrow_right = document.querySelector(".carousel-arrow-icon-right");
+    transactions_mobile_arrow_left = document.querySelector(".carousel-arrow-icon-left");
 
     //charts
     //doughnut chart - transactions types and amount of transactions in one type
@@ -558,6 +568,8 @@ const initTransactions = () => {
     //for mobile view, assing handleSwipe function
     transactions_charts_wrapper_wrapper.ontouchstart = handleOnTouchStart;
     transactions_charts_wrapper_wrapper.ontouchend = handleOnTouchEnd;
+    transactions_mobile_arrow_right.onclick = handleSwipe;
+    transactions_mobile_arrow_left.onclick = handleSwipe;
 
     //assign handleSearch function for transaction's finder 
     transactions_inputSearch.onkeyup = handleSearch;

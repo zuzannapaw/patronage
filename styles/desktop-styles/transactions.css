@@ -136,3 +136,11 @@
     padding-left:3px;
     font-family: Open Sans, sans-serif;
 }
+
+.carousel-arrow-icon-left {
+    display: none;
+}
+  
+.carousel-arrow-icon-right {
+    display: none;
+}
