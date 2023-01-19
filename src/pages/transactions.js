@@ -24,6 +24,7 @@ let transactions_select;
 let transactions_mobile_arrow_right;
 let transactions_mobile_arrow_left;
 let slideIndex = 1;
+let mobileThreshold = false;
 
 // https://gist.github.com/SleepWalker/da5636b1abcbaff48c4d
 let touchstartX = 0;
@@ -563,21 +564,46 @@ const initTransactions = () => {
         },
     });
 
-    showSlides(slideIndex);
+    const next = document.querySelector('.next');
+    const prev = document.querySelector('.prev');
+    let slides = document.getElementsByClassName("mySlides");
+
+    if (window.innerWidth < 769) {
+        showSlides(slideIndex);
+        mobileThreshold = true;
+    }
+
+    if (window.innerWidth >= 769) {
+        next.style.display = 'none';
+        prev.style.display = 'none';
+    }
+
+    window.onresize = (event) => {
+        if (!mobileThreshold && window.innerWidth < 769) {
+            showSlides(slideIndex);
+            mobileThreshold = true;
+            next.style.display = 'inline';
+            prev.style.display = 'inline';
+        }
+
+        if (mobileThreshold && window.innerWidth >= 769) {
+            mobileThreshold = false;
+            next.style.display = 'none';
+            prev.style.display = 'none';
+
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "block";
+            }
+        }
+    }
 
     // Next/previous controls
     function plusSlides(n) {
         showSlides(slideIndex += n);
     }
 
-    // Thumbnail image controls
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
-
     function showSlides(n) {
         let i;
-        let slides = document.getElementsByClassName("mySlides");
         if (n > slides.length) {slideIndex = 1}
         if (n < 1) {slideIndex = slides.length}
 
@@ -587,8 +613,6 @@ const initTransactions = () => {
         slides[slideIndex-1].style.display = "block";
     }
 
-    const next = document.querySelector('.next');
-    const prev = document.querySelector('.prev');
     prev.onclick = () => plusSlides(-1);
     next.onclick = () => plusSlides(1);
 
