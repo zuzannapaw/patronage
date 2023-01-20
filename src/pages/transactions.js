@@ -16,51 +16,82 @@ let transactions_usernameDiv;
 let transactions_transactionRows;
 let transactions_transactionRowsMobile;
 
-let transactions_charts_wrapper_wrapper;
+let transactions_slideshow_container;
 let transactions_transactionsList;
 let transactions_inputSearch;
 let transactions_select;
 
-let transactions_mobile_arrow_right;
-let transactions_mobile_arrow_left;
+let slides;
+let next;
+let prev;
+
+// https://www.w3schools.com/howto/howto_js_slideshow.asp?fbclid=IwAR2Wkk30YdOXqUHm9CKN22UgWt29PbJQXmz-1J256RndNTOEO8PIVJ4Reb0
+// first slide index (where to begin)
+let slideIndex = 1;
+// boolean responsible for checking if page is on mobile or desktop
+let mobileThreshold = false;
+
 
 // https://gist.github.com/SleepWalker/da5636b1abcbaff48c4d
 let touchstartX = 0;
 let touchendX = 0;
-//function for handling swipe - for mobile device 
-//getComputedStyle- style will return empty string
-//first rendered styles are default, then computed (from file.css)
-//and then inline from js code. Elemnt.style. will work on inline styles. 
-//computed styles can be overriden by inline styles. 
-//Inline styles are the highest in the hierarchy of styles (exept if you use !important in file.css) 
-const handleSwipe = () =>{
-    const doughnutChart = document.querySelector(".doughnut-chart");
-    const barChart = document.querySelector(".bar-chart");
 
-    // https://stackoverflow.com/questions/39679753/javascript-document-getelementbyidel-style-display-returns-empty-string-but
-    // https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle
-    const barChartStyles = window.getComputedStyle(barChart);
-    const barChartDisplay = barChartStyles.getPropertyValue('display')
 
-    if(barChartDisplay === "flex"){
-        barChart.style.display = "none"
-        doughnutChart.style.display = "flex"
-    }else{
-        barChart.style.display = "flex"
-        doughnutChart.style.display = "none"
-    
+// Next/previous controls
+const plusSlides = (n) => {
+    showSlides(slideIndex += n);
+}
+
+// show given slide by index number. Go to end of slides array or start from the begginning if
+// already at the end same with start slide and going back.
+const showSlides = (n) => {
+    let i;
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
     }
-};
+    slides[slideIndex-1].style.display = "block";
+}
+
+// When user resizes app window check if he is in mobile view or desktop
+// if on mobile then show first chart, hide the other and show next and prev buttons.
+// Also set mobileThreshold variable to true (to control switching between mobile and desktop).
+// If on desktop, set proper mobileThreshold and then show charts.
+const handleOnWindowResize = (event) => {
+    if (!mobileThreshold && window.innerWidth < 769) {
+        showSlides(slideIndex);
+        mobileThreshold = true;
+        next.style.display = 'inline';
+        prev.style.display = 'inline';
+    }
+
+    if (mobileThreshold && window.innerWidth >= 769) {
+        mobileThreshold = false;
+        next.style.display = 'none';
+        prev.style.display = 'none';
+
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "block";
+        }
+    }
+}
+
 
 //Helper functions for swipe event
 //handleGesture - is called in handleOnTouchedEnd.
 const handleGesture = () => {
     if (touchendX < touchstartX) {
-        handleSwipe();
+        // swipe left
+        console.log('swipe left');
+        plusSlides(-1);
     }
     
     if (touchendX > touchstartX) {
-        handleSwipe();
+        // swipe right
+        console.log('swipe right');
+        plusSlides(1);
     }
 };
 
@@ -77,7 +108,6 @@ const handleOnTouchEnd = (e) => {
         handleGesture();
     }
 };
-
 
 //https://dmitripavlutin.com/javascript-array-group/
 //Function that returns grouped transactions by date and transfer is to array of entries -
@@ -352,21 +382,17 @@ const renderTransactions = () => {
     console.log('Transactions render');
 
     return (`
-        <div class = "charts-wrapper-wrapper">
-            <div class = "charts-wrapper">
-                <div class="carousel-arrow-icon-left">
-                    <i class="fa-solid fa-circle-arrow-left"></i>
-                </div>
-                <div class="doughnut-chart">
-                    <canvas id="myChart"></canvas>
-                </div>
-                <div class="bar-chart">
-                    <canvas id="myChart2"></canvas>
-                </div>
-                <div class="carousel-arrow-icon-right">
-                    <i class="fa-solid fa-circle-arrow-right"></i>
-                </div>
+        <div class="slideshow-container">
+            <!-- Full-width images with number and caption text -->
+            <div class="mySlides fade">
+                <canvas id="myChart"></canvas>
             </div>
+            <div class="mySlides fade">
+                <canvas id="myChart2"></canvas>
+            </div>
+            <!-- Next and previous buttons -->
+            <a class="prev">&#10094;</a>
+            <a class="next">&#10095;</a>
         </div>
         <div class = "search-wrapper">
             ${getSearchInput()}
@@ -389,12 +415,10 @@ const initTransactions = () => {
     transactions_toLoginBtn = document.querySelector(".to-login-page");
     transactions_logoutBtn = document.querySelector(".logout-btn");
     transactions_transactionRows = document.querySelectorAll(".transaction-mobile-row");
-    transactions_charts_wrapper_wrapper = document.querySelector(".charts-wrapper-wrapper");
+    transactions_slideshow_container = document.querySelector(".slideshow-container");
     transactions_transactionsList = document.querySelector(".transactions-list");
     transactions_inputSearch = document.querySelector(".input-search");
     transactions_select = document.querySelector(".select");
-    transactions_mobile_arrow_right = document.querySelector(".carousel-arrow-icon-right");
-    transactions_mobile_arrow_left = document.querySelector(".carousel-arrow-icon-left");
 
     //charts
     //doughnut chart - transactions types and amount of transactions in one type
@@ -564,13 +588,28 @@ const initTransactions = () => {
         },
     });
 
-    addAccordinOnClicks();
-    //for mobile view, assing handleSwipe function
-    transactions_charts_wrapper_wrapper.ontouchstart = handleOnTouchStart;
-    transactions_charts_wrapper_wrapper.ontouchend = handleOnTouchEnd;
-    transactions_mobile_arrow_right.onclick = handleSwipe;
-    transactions_mobile_arrow_left.onclick = handleSwipe;
+    next = document.querySelector('.next');
+    prev = document.querySelector('.prev');
+    slides = document.getElementsByClassName("mySlides");
 
+    if (window.innerWidth < 769) {
+        showSlides(slideIndex);
+        mobileThreshold = true;
+    }
+
+    if (window.innerWidth >= 769) {
+        next.style.display = 'none';
+        prev.style.display = 'none';
+    }
+
+    window.onresize = handleOnWindowResize;
+
+    prev.onclick = () => plusSlides(-1);
+    next.onclick = () => plusSlides(1);
+
+    addAccordinOnClicks();
+    transactions_slideshow_container.ontouchstart = handleOnTouchStart;
+    transactions_slideshow_container.ontouchend = handleOnTouchEnd;
     //assign handleSearch function for transaction's finder 
     transactions_inputSearch.onkeyup = handleSearch;
     transactions_select.onchange = handleSearch;
