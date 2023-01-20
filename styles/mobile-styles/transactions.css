@@ -209,11 +209,13 @@
   position: relative;
   margin: auto;
   width: 100%;
+  height: 30vh;
 }
 
 /* Hide the images by default */
 .mySlides {
   display: none;
+  height: 100%;
 }
 
 /* Next & previous buttons */

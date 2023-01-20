@@ -140,22 +140,21 @@
 .slideshow-container {
     width: 100%;
     height: 30vh;
-  }
+}
 
 .slideshow-container:after {
     content: "";
     display: table;
     clear: both;
-  }
+}
   
-  /* Hide the images by default */
-  .mySlides {
+.mySlides {
     float: left;
     width: 50%;
     height: 100%;
-  }
+}
   
   /* Next & previous buttons */
-  .prev, .next {
+.prev, .next {
     display: none;
-  }
+}
